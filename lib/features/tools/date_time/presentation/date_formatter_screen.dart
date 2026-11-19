@@ -46,8 +46,8 @@ class _DateFormatterScreenState extends ConsumerState<DateFormatterScreen> {
   @override
   Widget build(BuildContext context) {
     final iso = _date.toIso8601String().split('T').first;
-    final us = '\${_date.month.toString().padLeft(2, '0')}/\${_date.day.toString().padLeft(2, '0')}/\${_date.year}';
-    final eu = '\${_date.day.toString().padLeft(2, '0')}/\${_date.month.toString().padLeft(2, '0')}/\${_date.year}';
+    final us = '${_date.month.toString().padLeft(2, '0')}/${_date.day.toString().padLeft(2, '0')}/${_date.year}';
+    final eu = '${_date.day.toString().padLeft(2, '0')}/${_date.month.toString().padLeft(2, '0')}/${_date.year}';
     final weekday = DateTimeEngine.getWeekdayName(_date.weekday);
 
     return ToolPageScaffold(
@@ -81,7 +81,7 @@ class _DateFormatterScreenState extends ConsumerState<DateFormatterScreen> {
         const SizedBox(height: KSpacing.xs),
         KStatRow(label: 'European Format (DD/MM/YYYY)', value: eu),
         const SizedBox(height: KSpacing.xs),
-        KStatRow(label: 'Unix Epoch Seconds', value: '\${_date.millisecondsSinceEpoch ~/ 1000}'),
+        KStatRow(label: 'Unix Epoch Seconds', value: '${_date.millisecondsSinceEpoch ~/ 1000}'),
       ],
     );
   }

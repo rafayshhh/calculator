@@ -18,6 +18,23 @@ class FuelCostResult {
   });
 }
 
+class TipResult {
+  final double tipAmount;
+  final double totalAmount;
+  final double tipPerPerson;
+  final double totalPerPerson;
+
+  const TipResult({
+    required this.tipAmount,
+    required this.totalAmount,
+    required this.tipPerPerson,
+    required this.totalPerPerson,
+  });
+
+  double get totalBill => totalAmount;
+  double get perPerson => totalPerPerson;
+}
+
 class EverydayEngine {
   EverydayEngine._();
 
@@ -41,23 +58,25 @@ class EverydayEngine {
   static FuelCostResult calculateFuelCost({
     required double distance,
     required double efficiency,
-    required double fuelPrice,
+    double? fuelPrice,
+    double? pricePerUnit,
     required bool isVolumePerDistance,
   }) {
+    final effectivePrice = pricePerUnit ?? fuelPrice ?? 0.0;
     if (distance < 0) {
       throw ArgumentError('Distance cannot be negative');
     }
     if (efficiency <= 0) {
       throw ArgumentError('Fuel efficiency must be positive');
     }
-    if (fuelPrice < 0) {
+    if (effectivePrice < 0) {
       throw ArgumentError('Fuel price cannot be negative');
     }
 
     final double fuelNeeded = isVolumePerDistance
         ? (distance / 100.0) * efficiency
         : distance / efficiency;
-    final double totalCost = fuelNeeded * fuelPrice;
+    final double totalCost = fuelNeeded * effectivePrice;
 
     return FuelCostResult(
       fuelNeeded: fuelNeeded,
@@ -68,6 +87,10 @@ class EverydayEngine {
   /// What is P% of T?
   static double calculatePercentOf(double percent, double total) {
     return (percent / 100.0) * total;
+  }
+
+  static double calculatePercentageOf(double percent, double total) {
+    return calculatePercentOf(percent, total);
   }
 
   /// Part is what percent of Whole?
@@ -90,34 +113,36 @@ class EverydayEngine {
   }
 
   /// Tip and Bill Splitting
-  static Map<String, double> calculateTip({
+  static TipResult calculateTip({
     required double billAmount,
-    required double tipPercent,
-    int splitCount = 1,
+    double? tipPercent,
+    double? tipPercentage,
+    int? splitCount,
+    int? people,
     double taxPercent = 0.0,
   }) {
+    final effectiveTip = tipPercentage ?? tipPercent ?? 15.0;
+    final effectivePeople = people ?? splitCount ?? 1;
     if (billAmount < 0) throw ArgumentError('Bill amount cannot be negative');
-    if (tipPercent < 0) throw ArgumentError('Tip percent cannot be negative');
-    if (splitCount <= 0) throw ArgumentError('Split count must be positive');
+    if (effectiveTip < 0) throw ArgumentError('Tip percent cannot be negative');
+    if (effectivePeople <= 0) throw ArgumentError('Split count must be positive');
 
-    final tipAmount = (billAmount * tipPercent) / 100.0;
+    final tipAmount = (billAmount * effectiveTip) / 100.0;
     final taxAmount = (billAmount * taxPercent) / 100.0;
     final totalBill = billAmount + tipAmount + taxAmount;
-    final perPerson = totalBill / splitCount;
+    final perPerson = totalBill / effectivePeople;
+    final tipPerPerson = tipAmount / effectivePeople;
 
-    return {
-      'tipAmount': tipAmount,
-      'taxAmount': taxAmount,
-      'totalBill': totalBill,
-      'perPerson': perPerson,
-    };
+    return TipResult(
+      tipAmount: tipAmount,
+      totalAmount: totalBill,
+      tipPerPerson: tipPerPerson,
+      totalPerPerson: perPerson,
+    );
   }
 
   /// Unit price
-  static double calculateUnitPrice({
-    required double price,
-    required double quantity,
-  }) {
+  static double calculateUnitPrice(double price, double quantity) {
     if (quantity <= 0) throw ArgumentError('Quantity must be positive');
     if (price < 0) throw ArgumentError('Price cannot be negative');
     return price / quantity;

@@ -66,7 +66,7 @@ class _GravitationalOrbitScreenState extends ConsumerState<GravitationalOrbitScr
 
     return ToolPageScaffold(
       title: 'Orbital Mechanics & Gravitation',
-      description: 'Computes circular orbital velocity, period, and Newton's gravitational force',
+      description: "Computes circular orbital velocity, period, and Newton's gravitational force",
       formula: 'v_orb = √(GM / r),  T = 2π√(r³ / GM),  F = G(m₁m₂) / r²',
       onReset: _reset,
       onSave: () => _logHistory('Orbit alt=${altitudeKm}km', 'v≈7.66 km/s, T≈92.5 min'),

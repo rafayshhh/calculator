@@ -8,6 +8,7 @@ import 'k_glass_card.dart';
 
 class ResultDisplayCard extends StatelessWidget {
   final String label;
+  final String? title;
   final String value;
   final String? secondaryLabel;
   final String? secondaryValue;
@@ -24,7 +25,8 @@ class ResultDisplayCard extends StatelessWidget {
 
   const ResultDisplayCard({
     super.key,
-    required this.label,
+    String? label,
+    this.title,
     required this.value,
     this.secondaryLabel,
     this.secondaryValue,
@@ -38,7 +40,7 @@ class ResultDisplayCard extends StatelessWidget {
     this.onShare,
     this.onReset,
     this.onCopy,
-  });
+  }) : label = label ?? title ?? 'Result';
 
   @override
   Widget build(BuildContext context) {

@@ -82,7 +82,7 @@ class _NumericalMethodsScreenState extends ConsumerState<NumericalMethodsScreen>
             value: _root!.toStringAsFixed(6).replaceAll(RegExp(r'\.?0+\$'), ''),
             secondaryLabel: 'Iteration Scheme',
             secondaryValue: 'Newton-Raphson',
-            formula: 'x_{k+1} = x_k - f(x_k) / f'(x_k)',
+            formula: "x_{k+1} = x_k - f(x_k) / f'(x_k)",
             substitution: 'Converged in 20 iterations to ${_root!.toStringAsFixed(6)}',
             onShare: () {},
           ),

@@ -140,4 +140,58 @@ class EngineeringEngine {
     }
     return 1.0 / invSum;
   }
+
+  /// Electrical Energy & Cost
+  static double calculateEnergyKWh(double powerWatts, double hours) {
+    if (powerWatts < 0 || hours < 0) throw ArgumentError('Values cannot be negative');
+    return (powerWatts * hours) / 1000.0;
+  }
+
+  static double calculateEnergyWattHours(double powerWatts, double hours) {
+    if (powerWatts < 0 || hours < 0) throw ArgumentError('Values cannot be negative');
+    return powerWatts * hours;
+  }
+
+  static double calculateEnergyCost(double powerWatts, double hours, double costPerKWh) {
+    return calculateEnergyKWh(powerWatts, hours) * costPerKWh;
+  }
+
+  /// LED Resistor & Power
+  static double calculateLedResistor(double vs, double vf, double currentAmps) {
+    if (currentAmps <= 0) throw ArgumentError('Current must be positive');
+    if (vs <= vf) throw ArgumentError('Supply voltage must be greater than forward voltage');
+    return (vs - vf) / currentAmps;
+  }
+
+  static double calculateLedPower(double vs, double vf, double currentAmps) {
+    if (vs < vf) return 0.0;
+    return (vs - vf) * currentAmps;
+  }
+
+  /// Mechanical Efficiency
+  static double calculateEfficiency(double usefulOutput, double totalInput) {
+    if (totalInput <= 0) throw ArgumentError('Total input must be positive');
+    return (usefulOutput / totalInput) * 100.0;
+  }
+
+  static double calculateUsefulOutput(double totalInput, double efficiencyPercent) {
+    return totalInput * (efficiencyPercent / 100.0);
+  }
+
+  static double calculateTotalInput(double usefulOutput, double efficiencyPercent) {
+    if (efficiencyPercent <= 0) throw ArgumentError('Efficiency must be positive');
+    return (usefulOutput * 100.0) / efficiencyPercent;
+  }
+
+  /// Voltage Divider
+  static double calculateVoltageDividerOut(double vin, double r1, double r2) {
+    final totalR = r1 + r2;
+    if (totalR <= 0) throw ArgumentError('Resistance must be positive');
+    return vin * (r2 / totalR);
+  }
+
+  static double calculateVoltageDividerR2(double vin, double vout, double r1) {
+    if (vin <= vout) throw ArgumentError('Input voltage must be greater than output voltage');
+    return (vout * r1) / (vin - vout);
+  }
 }

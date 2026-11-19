@@ -12,6 +12,7 @@ class KGlassCard extends StatelessWidget {
   final double blurAmount;
   final Color? color;
   final Color? borderColor;
+  final VoidCallback? onTap;
 
   const KGlassCard({
     super.key,
@@ -21,6 +22,7 @@ class KGlassCard extends StatelessWidget {
     this.blurAmount = 20.0,
     this.color,
     this.borderColor,
+    this.onTap,
   });
 
   @override
@@ -30,25 +32,38 @@ class KGlassCard extends StatelessWidget {
     final defaultBg = isDark ? palette.glassSurface : palette.surface;
     final defaultBorder = palette.glassBorder;
 
+    Widget content = Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: color ?? defaultBg,
+        borderRadius: BorderRadius.circular(borderRadius),
+        border: Border.all(
+          color: borderColor ?? defaultBorder,
+          width: 1.0,
+        ),
+      ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: child,
+      ),
+    );
+
+    if (onTap != null) {
+      content = Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: content,
+        ),
+      );
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: blurAmount, sigmaY: blurAmount),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            color: color ?? defaultBg,
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: borderColor ?? defaultBorder,
-              width: 1.0,
-            ),
-          ),
-          child: Material(
-            type: MaterialType.transparency,
-            child: child,
-          ),
-        ),
+        child: content,
       ),
     );
   }

@@ -67,7 +67,7 @@ class _TaylorSeriesScreenState extends ConsumerState<TaylorSeriesScreen> {
     return ToolPageScaffold(
       title: 'Taylor & Maclaurin Series',
       description: 'Polynomial approximation around expansion point a',
-      formula: 'f(x) ≈ f(a) + f'(a)(x-a) + f''(a)(x-a)²/2! + ...',
+      formula: "f(x) ≈ f(a) + f'(a)(x-a) + f''(a)(x-a)²/2! + ...",
       onReset: _reset,
       onSave: () => _logHistory('Taylor P3($x) around a=$a', '${approx.toStringAsFixed(5)}'),
       children: [

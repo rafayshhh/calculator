@@ -50,8 +50,8 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen> {
     });
 
     ref.read(historyProvider.notifier).add(
-      'Age: \${_result!.years} years, \${_result!.months} months',
-      '\${_result!.years} Years',
+      'Age: ${_result!.years} years, ${_result!.months} months',
+      '${_result!.years} Years',
       toolRoute: '/tools/date_time/age',
       toolStateJson: stateJson,
     );
@@ -125,17 +125,17 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen> {
             label: 'Current Age',
             value: "${_result!.years} Years",
             secondaryLabel: 'Exact Breakdown',
-            secondaryValue: '\${_result!.months} months, \${_result!.days} days',
+            secondaryValue: '${_result!.months} months, ${_result!.days} days',
             formula: 'Age = AsOfDate - BirthDate',
-            substitution: '\${_result!.years}y \${_result!.months}m \${_result!.days}d',
+            substitution: '${_result!.years}y ${_result!.months}m ${_result!.days}d',
             onShare: () {},
           ),
           const SizedBox(height: KSpacing.md),
-          KStatRow(label: 'Total Days Lived', value: '\${_result!.totalDays} days'),
+          KStatRow(label: 'Total Days Lived', value: '${_result!.totalDays} days'),
           const SizedBox(height: KSpacing.xs),
-          KStatRow(label: 'Total Weeks Lived', value: '\${_result!.totalWeeks} weeks'),
+          KStatRow(label: 'Total Weeks Lived', value: '${_result!.totalWeeks} weeks'),
           const SizedBox(height: KSpacing.xs),
-          KStatRow(label: 'Days to Next Birthday', value: '\${_result!.nextBirthdayDays} days'),
+          KStatRow(label: 'Days to Next Birthday', value: '${_result!.nextBirthdayDays} days'),
           const SizedBox(height: KSpacing.xs),
           KStatRow(label: 'Day Born', value: _result!.dayOfWeekBorn),
         ],

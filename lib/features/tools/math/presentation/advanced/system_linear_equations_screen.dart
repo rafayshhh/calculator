@@ -80,7 +80,7 @@ class _SystemLinearEquationsScreenState extends ConsumerState<SystemLinearEquati
     return ToolPageScaffold(
       title: 'Linear Systems Solver (2x2)',
       description: 'Solves simultaneous equations a₁x + b₁y = c₁, a₂x + b₂y = c₂',
-      formula: 'x = Dx / D,  y = Dy / D  (Cramer's Rule)',
+      formula: "x = Dx / D,  y = Dy / D  (Cramer's Rule)",
       onReset: _reset,
       onSave: () => _logHistory('System 2x2: [$a1, $b1=$c1], [$a2, $b2=$c2]', '$solStr'),
       children: [

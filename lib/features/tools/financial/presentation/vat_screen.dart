@@ -51,7 +51,7 @@ class _VatScreenState extends ConsumerState<VatScreen> {
 
       final stateJson = jsonEncode({'amount': _amount, 'rate': _rate, 'isInclusive': _isInclusive});
       ref.read(historyProvider.notifier).add(
-        'VAT: \$$_amount @ $_rate% \${_isInclusive ? "inclusive" : "exclusive"}',
+        'VAT: \$$_amount @ $_rate% ${_isInclusive ? "inclusive" : "exclusive"}',
         '\$${res['total']!.toStringAsFixed(2)}',
         toolRoute: '/tools/financial/vat',
         toolStateJson: stateJson,

@@ -62,9 +62,9 @@ class _StopwatchTimerScreenState extends ConsumerState<StopwatchTimerScreen> {
     final minutes = (ms ~/ 60000) % 60;
     final hours = ms ~/ 3600000;
     if (hours > 0) {
-      return '\${hours.toString().padLeft(2, '0')}:\${minutes.toString().padLeft(2, '0')}:\${seconds.toString().padLeft(2, '0')}.\${hundreds.toString().padLeft(2, '0')}';
+      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}';
     }
-    return '\${minutes.toString().padLeft(2, '0')}:\${seconds.toString().padLeft(2, '0')}.\${hundreds.toString().padLeft(2, '0')}';
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -125,7 +125,7 @@ class _StopwatchTimerScreenState extends ConsumerState<StopwatchTimerScreen> {
                 const SizedBox(height: KSpacing.sm),
                 ..._laps.asMap().entries.map((e) => ListTile(
                   dense: true,
-                  leading: Text('Lap \${_laps.length - e.key}'),
+                  leading: Text('Lap ${_laps.length - e.key}'),
                   trailing: Text(e.value, style: const TextStyle(fontFamily: 'monospace')),
                 )),
               ],

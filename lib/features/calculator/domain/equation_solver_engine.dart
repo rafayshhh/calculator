@@ -94,22 +94,12 @@ class EquationSolverEngine {
 
     // 2. Linear Equation Solver or Bisection Numerical Solver
     // f(x) = LHS - RHS = 0
-    // Pre-parse ASTs once for efficient repeated evaluation
-    final Expr lhsAst;
-    final Expr rhsAst;
-    try {
-      lhsAst = Parser(Tokenizer(lhsStr).tokenize()).parse();
-      rhsAst = Parser(Tokenizer(rhsStr).tokenize()).parse();
-    } catch (e) {
-      throw ArgumentError('Could not parse equation variables: $e');
-    }
-
     // Check if linear by sampling f(0), f(1), f(2)
     double f0, f1, f2;
     try {
-      f0 = _evalDiffAst(lhsAst, rhsAst, 0.0);
-      f1 = _evalDiffAst(lhsAst, rhsAst, 1.0);
-      f2 = _evalDiffAst(lhsAst, rhsAst, 2.0);
+      f0 = _evalDiff(lhsStr, rhsStr, 0.0);
+      f1 = _evalDiff(lhsStr, rhsStr, 1.0);
+      f2 = _evalDiff(lhsStr, rhsStr, 2.0);
     } catch (e) {
       throw ArgumentError('Could not parse equation variables: $e');
     }
@@ -144,7 +134,7 @@ class EquationSolverEngine {
 
     // 3. Numerical Root Finding (Bisection / Secant)
     steps.add('General non-linear equation f(x) = ($lhsStr) - ($rhsStr) = 0');
-    final root = _findRootNumerically(lhsAst, rhsAst);
+    final root = _findRootNumerically(lhsStr, rhsStr);
     if (root != null) {
       steps.add('Numerical convergence achieved at x ≈ ${_clean(root)}');
       return EquationSolution(
@@ -153,7 +143,7 @@ class EquationSolverEngine {
         solutions: ['x ≈ ${_clean(root)}'],
         steps: steps,
         verification:
-            'f(${_clean(root)}) ≈ ${_evalDiffAst(lhsAst, rhsAst, root).toStringAsExponential(2)}',
+            'f(${_clean(root)}) ≈ ${_evalDiff(lhsStr, rhsStr, root).toStringAsExponential(2)}',
       );
     }
 
@@ -166,12 +156,6 @@ class EquationSolverEngine {
     final leftVal = CalculatorEngine.evaluateNumeric(lhs, variables: {'x': x});
     final rightVal = CalculatorEngine.evaluateNumeric(rhs, variables: {'x': x});
     return leftVal - rightVal;
-  }
-
-  /// Evaluate f(x) = LHS - RHS using pre-parsed ASTs for efficiency.
-  static double _evalDiffAst(Expr lhsAst, Expr rhsAst, double x) {
-    final evaluator = Evaluator(variables: {'x': x});
-    return evaluator.evaluate(lhsAst) - evaluator.evaluate(rhsAst);
   }
 
   static Map<String, double>? _tryParseQuadratic(String lhs, String rhs) {
@@ -209,16 +193,16 @@ class EquationSolverEngine {
     return null;
   }
 
-  static double? _findRootNumerically(Expr lhsAst, Expr rhsAst) {
+  static double? _findRootNumerically(String lhs, String rhs) {
     double? prevF;
 
     for (double x = -100.0; x <= 100.0; x += 0.5) {
       try {
-        final f = _evalDiffAst(lhsAst, rhsAst, x);
+        final f = _evalDiff(lhs, rhs, x);
         if (f.abs() < 1e-9) return x;
         if (prevF != null && (prevF * f) < 0) {
           // Bracket found between (x - 0.5) and x
-          return _bisect(lhsAst, rhsAst, x - 0.5, x);
+          return _bisect(lhs, rhs, x - 0.5, x);
         }
         prevF = f;
       } catch (_) {}
@@ -226,16 +210,16 @@ class EquationSolverEngine {
     return null;
   }
 
-  static double _bisect(Expr lhsAst, Expr rhsAst, double low, double high) {
+  static double _bisect(String lhs, String rhs, double low, double high) {
     double l = low;
     double r = high;
     for (int i = 0; i < 100; i++) {
       final mid = (l + r) / 2.0;
-      final fMid = _evalDiffAst(lhsAst, rhsAst, mid);
+      final fMid = _evalDiff(lhs, rhs, mid);
       if (fMid.abs() < 1e-10 || (r - l).abs() < 1e-10) {
         return mid;
       }
-      final fLow = _evalDiffAst(lhsAst, rhsAst, l);
+      final fLow = _evalDiff(lhs, rhs, l);
       if (fLow * fMid < 0) {
         r = mid;
       } else {

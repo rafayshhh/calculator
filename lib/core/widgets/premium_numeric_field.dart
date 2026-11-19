@@ -8,8 +8,9 @@ class PremiumNumericField extends StatefulWidget {
   final String? prefix;
   final String? suffix;
   final String? hint;
-  final String value;
-  final ValueChanged<String> onChanged;
+  final String? value;
+  final String? initialValue;
+  final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final bool hasError;
   final String? errorText;
@@ -17,12 +18,13 @@ class PremiumNumericField extends StatefulWidget {
 
   const PremiumNumericField({
     super.key,
-    required this.label,
+    this.label = '',
     this.prefix,
     this.suffix,
     this.hint,
-    required this.value,
-    required this.onChanged,
+    this.value,
+    this.initialValue,
+    this.onChanged,
     this.onSubmitted,
     this.hasError = false,
     this.errorText,
@@ -39,21 +41,23 @@ class _PremiumNumericFieldState extends State<PremiumNumericField> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.value);
+    _controller = TextEditingController(text: widget.value ?? widget.initialValue ?? '');
   }
 
   @override
   void didUpdateWidget(PremiumNumericField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value && _controller.text != widget.value) {
+    final val = widget.value ?? widget.initialValue ?? '';
+    final oldVal = oldWidget.value ?? oldWidget.initialValue ?? '';
+    if (oldVal != val && _controller.text != val) {
       final previousSelection = _controller.selection;
       _controller.value = TextEditingValue(
-        text: widget.value,
+        text: val,
         selection:
             previousSelection.isValid &&
-                previousSelection.baseOffset <= widget.value.length
+                previousSelection.baseOffset <= val.length
             ? previousSelection
-            : TextSelection.collapsed(offset: widget.value.length),
+            : TextSelection.collapsed(offset: val.length),
       );
     }
   }
@@ -76,15 +80,17 @@ class _PremiumNumericFieldState extends State<PremiumNumericField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.label,
-          style: TextStyle(
-            color: widget.hasError ? palette.error : textSecondaryColor,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+        if (widget.label.isNotEmpty) ...[
+          Text(
+            widget.label,
+            style: TextStyle(
+              color: widget.hasError ? palette.error : textSecondaryColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        const SizedBox(height: KSpacing.xs),
+          const SizedBox(height: KSpacing.xs),
+        ],
         Container(
           padding: const EdgeInsets.symmetric(
             horizontal: KSpacing.md,
@@ -148,7 +154,7 @@ class _PremiumNumericFieldState extends State<PremiumNumericField> {
                   ),
                   onPressed: () {
                     _controller.clear();
-                    widget.onChanged('');
+                    widget.onChanged?.call('');
                   },
                   tooltip: 'Clear ${widget.label}',
                   padding: EdgeInsets.zero,

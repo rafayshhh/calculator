@@ -68,8 +68,8 @@ class _PercentageCalculatorScreenState extends ConsumerState<PercentageCalculato
 
       final stateJson = jsonEncode({'modeIndex': _modeIndex, 'valX': _valX, 'valY': _valY});
       ref.read(historyProvider.notifier).add(
-        'Percentage: \${_modeIndex == 0 ? "$_valX% of $_valY" : _modeIndex == 1 ? "$_valX is what % of $_valY" : "% change from $_valX to $_valY"}',
-        '\${r.toStringAsFixed(2)}\${_modeIndex != 0 ? "%" : ""}',
+        'Percentage: ${_modeIndex == 0 ? "$_valX% of $_valY" : _modeIndex == 1 ? "$_valX is what % of $_valY" : "% change from $_valX to $_valY"}',
+        '${r.toStringAsFixed(2)}${_modeIndex != 0 ? "%" : ""}',
         toolRoute: '/tools/everyday/percentage',
         toolStateJson: stateJson,
       );
@@ -145,9 +145,9 @@ class _PercentageCalculatorScreenState extends ConsumerState<PercentageCalculato
         else if (_result != null) ...[
           ResultDisplayCard(
             label: label,
-            value: '\${_result!.toStringAsFixed(2)} \$unit',
+            value: '${_result!.toStringAsFixed(2)} \$unit',
             formula: _modeIndex == 0 ? '(X / 100) × Y' : _modeIndex == 1 ? '(X / Y) × 100' : '((Y - X) / X) × 100',
-            substitution: 'Result = \${_result!.toStringAsFixed(2)} \$unit',
+            substitution: 'Result = ${_result!.toStringAsFixed(2)} \$unit',
             onShare: () {},
           ),
         ],

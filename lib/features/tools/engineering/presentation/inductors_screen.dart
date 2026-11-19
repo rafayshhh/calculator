@@ -148,7 +148,7 @@ class _InductorsScreenState extends ConsumerState<InductorsScreen> {
                     controller: ctrl,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
-                      labelText: 'Inductor L\${idx + 1}',
+                      labelText: 'Inductor L${idx + 1}',
                       suffixText: 'mH',
                       border: const OutlineInputBorder(),
                     ),

@@ -13,6 +13,7 @@ class CalculatorState {
   final double? memoryValue;
   final AngleMode angleMode;
   final bool hasError;
+  final String? errorType;
   final bool isScientific;
   final bool isScientificExpanded;
 
@@ -24,6 +25,7 @@ class CalculatorState {
     this.memoryValue,
     this.angleMode = AngleMode.degrees,
     this.hasError = false,
+    this.errorType,
     this.isScientific = false,
     this.isScientificExpanded = false,
   });
@@ -40,6 +42,7 @@ class CalculatorState {
     bool clearMemory = false,
     AngleMode? angleMode,
     bool? hasError,
+    String? errorType,
     bool? isScientific,
     bool? isScientificExpanded,
   }) {
@@ -51,6 +54,7 @@ class CalculatorState {
       memoryValue: clearMemory ? null : (memoryValue ?? this.memoryValue),
       angleMode: angleMode ?? this.angleMode,
       hasError: hasError ?? this.hasError,
+      errorType: errorType ?? this.errorType,
       isScientific: isScientific ?? this.isScientific,
       isScientificExpanded: isScientificExpanded ?? this.isScientificExpanded,
     );
@@ -115,6 +119,10 @@ class CalculatorNotifier extends Notifier<CalculatorState> {
       expression: newExpr,
       hasError: false,
     );
+  }
+
+  void appendFunction(String func) {
+    append('$func(');
   }
 
   void setExpression(String expr) {

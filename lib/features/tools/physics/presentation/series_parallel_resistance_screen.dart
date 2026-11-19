@@ -149,7 +149,7 @@ class _SeriesParallelResistanceScreenState extends ConsumerState<SeriesParallelR
                     controller: ctrl,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
-                      labelText: 'Resistor R\${idx + 1}',
+                      labelText: 'Resistor R${idx + 1}',
                       suffixText: 'Ω',
                       border: const OutlineInputBorder(),
                     ),

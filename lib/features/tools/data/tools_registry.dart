@@ -1561,4 +1561,26 @@ class ToolsRegistry {
       return null;
     }
   }
+
+  static List<ToolDefinition> get tools => allTools;
+
+  static ToolDefinition? getToolById(String id) => getById(id);
+
+  static List<ToolDefinition> getToolsByCategory(ToolCategory category) {
+    return allTools.where((t) => t.category == category).toList();
+  }
+
+  static List<ToolDefinition> getRelatedTools(String toolId, {int limit = 4}) {
+    final current = getById(toolId);
+    if (current == null) return allTools.take(limit).toList();
+    return allTools
+        .where((t) =>
+            t.id != toolId &&
+            (t.category == current.category ||
+                t.subcategory == current.subcategory))
+        .take(limit)
+        .toList();
+  }
 }
+
+typedef ToolRegistry = ToolsRegistry;

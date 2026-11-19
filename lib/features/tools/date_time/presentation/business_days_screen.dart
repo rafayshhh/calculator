@@ -62,7 +62,7 @@ class _BusinessDaysScreenState extends ConsumerState<BusinessDaysScreen> {
         start: _startDate,
         end: _endDate,
         weekendDays: _weekendDays,
-        holidays: _holidays,
+        holidays: _holidays.toSet(),
       );
 
       setState(() {

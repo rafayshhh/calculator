@@ -34,7 +34,7 @@ class _TimeZoneConverterScreenState extends ConsumerState<TimeZoneConverterScree
   };
 
   String _format(DateTime dt) {
-    return '\${dt.year}-\${dt.month.toString().padLeft(2, '0')}-\${dt.day.toString().padLeft(2, '0')} \${dt.hour.toString().padLeft(2, '0')}:\${dt.minute.toString().padLeft(2, '0')}';
+    return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -65,7 +65,7 @@ class _TimeZoneConverterScreenState extends ConsumerState<TimeZoneConverterScree
           secondaryLabel: 'UTC Standard Time',
           secondaryValue: _format(_utcTime),
           formula: 'T_target = UTC + Offset',
-          substitution: 'Offset: UTC\${_targetOffset >= 0 ? "+" : ""}\$_targetOffset:00',
+          substitution: 'Offset: UTC${_targetOffset >= 0 ? "+" : ""}\$_targetOffset:00',
           onShare: () {},
         ),
       ],

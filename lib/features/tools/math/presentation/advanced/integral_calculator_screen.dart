@@ -76,7 +76,7 @@ class _IntegralCalculatorScreenState extends ConsumerState<IntegralCalculatorScr
     return ToolPageScaffold(
       title: 'Definite Integral Calculator',
       description: 'Computes exact polynomial and Simpson integration across bounds [a, b]',
-      formula: '∫_a^b P(x)dx = [F(b) - F(a)], F'(x) = P(x)',
+      formula: "∫_a^b P(x)dx = [F(b) - F(a)], F'(x) = P(x)",
       onReset: _reset,
       onSave: () => _logHistory('∫_{$a}^{$b} P(x)dx', '${integralVal.toStringAsFixed(4)}'),
       children: [

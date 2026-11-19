@@ -2113,3 +2113,5 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+final routerProvider = appRouterProvider;

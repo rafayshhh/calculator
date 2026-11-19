@@ -82,7 +82,7 @@ class StatisticsEngine {
   /// Sample or Population Variance & Standard Deviation
   static Map<String, dynamic> calculateVarianceStdDev(
     List<num> dataset, {
-    required bool isSample,
+    bool isSample = true,
   }) {
     if (dataset.isEmpty) {
       throw ArgumentError('Dataset cannot be empty');
@@ -220,18 +220,25 @@ class StatisticsEngine {
 
   /// Binomial Distribution
   static Map<String, dynamic> calculateBinomialDistribution({
-    required int n,
-    required int k,
-    required double p,
+    int? n,
+    int? k,
+    double? p,
+    int? trials,
+    int? successes,
+    double? probability,
   }) {
-    if (n < 0 || k < 0 || k > n || p < 0 || p > 1) {
-      throw ArgumentError('Invalid parameters for binomial distribution: n=$n, k=$k, p=$p');
+    final effectiveN = n ?? trials ?? 0;
+    final effectiveK = k ?? successes ?? 0;
+    final effectiveP = p ?? probability ?? 0.0;
+
+    if (effectiveN < 0 || effectiveK < 0 || effectiveK > effectiveN || effectiveP < 0 || effectiveP > 1) {
+      throw ArgumentError('Invalid parameters for binomial distribution: n=$effectiveN, k=$effectiveK, p=$effectiveP');
     }
 
-    final nCk = combinations(n, k);
-    final exact = nCk * math.pow(p, k) * math.pow(1.0 - p, n - k);
-    final expected = n * p;
-    final variance = n * p * (1.0 - p);
+    final nCk = combinations(effectiveN, effectiveK);
+    final exact = nCk * math.pow(effectiveP, effectiveK) * math.pow(1.0 - effectiveP, effectiveN - effectiveK);
+    final expected = effectiveN * effectiveP;
+    final variance = effectiveN * effectiveP * (1.0 - effectiveP);
     final stdDev = math.sqrt(variance);
 
     return {

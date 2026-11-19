@@ -65,7 +65,7 @@ class _LinearRegressionScreenState extends ConsumerState<LinearRegressionScreen>
 
     return ToolPageScaffold(
       title: 'Ordinary Least Squares Linear Regression',
-      description: 'Finds best fit line y = mx + b, Pearson's r, and R² coefficient of determination',
+      description: "Finds best fit line y = mx + b, Pearson's r, and R² coefficient of determination",
       formula: 'y = mx + b,  m = [n∑xy - ∑x∑y] / [n∑x² - (∑x)²]',
       onReset: _reset,
       onSave: () => _logHistory('Regression n=${xList.length}', '$eq (R²=${r2.toStringAsFixed(3)})'),

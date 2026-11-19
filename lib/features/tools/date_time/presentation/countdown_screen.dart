@@ -61,7 +61,7 @@ class _CountdownScreenState extends ConsumerState<CountdownScreen> {
         ListTile(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: Colors.white24)),
           title: const Text('Target Event Date', style: TextStyle(fontSize: 12, color: Colors.grey)),
-          subtitle: Text('\${_targetDate.year}-\${_targetDate.month.toString().padLeft(2, '0')}-\${_targetDate.day.toString().padLeft(2, '0')}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          subtitle: Text('${_targetDate.year}-${_targetDate.month.toString().padLeft(2, '0')}-${_targetDate.day.toString().padLeft(2, '0')}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           trailing: const Icon(Icons.event_repeat_rounded),
           onTap: _selectTargetDate,
         ),
@@ -77,9 +77,9 @@ class _CountdownScreenState extends ConsumerState<CountdownScreen> {
           onShare: () {},
         ),
         const SizedBox(height: KSpacing.md),
-        KStatRow(label: 'Total Hours Remaining', value: '\${diff.inHours} hours'),
+        KStatRow(label: 'Total Hours Remaining', value: '${diff.inHours} hours'),
         const SizedBox(height: KSpacing.xs),
-        KStatRow(label: 'Total Minutes Remaining', value: '\${diff.inMinutes} minutes'),
+        KStatRow(label: 'Total Minutes Remaining', value: '${diff.inMinutes} minutes'),
       ],
     );
   }

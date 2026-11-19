@@ -14,6 +14,8 @@ class ElementBreakdown {
     required this.atomicMass,
     required this.massPercentage,
   });
+
+  double get contribution => count * atomicMass;
 }
 
 class MolarMassResult {
@@ -32,6 +34,10 @@ class ChemistryEngine {
   ChemistryEngine._();
 
   static const double rGasConstant = 8.314462618; // L·kPa / (mol·K)
+  static const double avogadroConstant = 6.02214076e23;
+
+  static double celsiusToKelvin(double c) => c + 273.15;
+  static double kelvinToCelsius(double k) => k - 273.15;
 
   static const Map<String, (String name, double mass)> elementTable = {
     'H': ('Hydrogen', 1.008),
@@ -216,6 +222,22 @@ class ChemistryEngine {
     if (nMol <= 0) throw ArgumentError('Moles must be positive');
     if (tKelvin <= 0) throw ArgumentError('Temperature in Kelvin must be positive');
     return (nMol * rGasConstant * tKelvin) / vLiters;
+  }
+
+  /// Ideal Gas Moles (mol)
+  static double calculateIdealGasMoles(double pKpa, double vLiters, double tKelvin) {
+    if (pKpa <= 0) throw ArgumentError('Pressure must be positive');
+    if (vLiters <= 0) throw ArgumentError('Volume must be positive');
+    if (tKelvin <= 0) throw ArgumentError('Temperature in Kelvin must be positive');
+    return (pKpa * vLiters) / (rGasConstant * tKelvin);
+  }
+
+  /// Ideal Gas Temperature (K)
+  static double calculateIdealGasTemperature(double pKpa, double vLiters, double nMol) {
+    if (pKpa <= 0) throw ArgumentError('Pressure must be positive');
+    if (vLiters <= 0) throw ArgumentError('Volume must be positive');
+    if (nMol <= 0) throw ArgumentError('Moles must be positive');
+    return (pKpa * vLiters) / (nMol * rGasConstant);
   }
 
   /// pH & pOH

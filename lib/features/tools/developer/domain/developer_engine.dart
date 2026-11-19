@@ -48,6 +48,13 @@ class BitwiseResult {
     required this.binaryResult,
     required this.decimalResult,
   });
+
+  String get decimal => decimalResult;
+  String get hex => hexResult;
+  String get hexadecimal => hexResult;
+  String get binary => binaryResult;
+  String get breakdown => binaryBreakdown;
+  String get octal => DeveloperEngine._bigIntToRadix(result, 8);
 }
 
 /// Structured result for Data Transfer Time Calculation
@@ -73,6 +80,9 @@ class DataTransferResult {
     required this.minutes,
     required this.days,
   });
+
+  String get formattedDuration => formattedTime;
+  double get totalBytes => fileSizeBytes;
 }
 
 /// Structured result for Color Conversion
@@ -193,88 +203,104 @@ class DeveloperEngine {
   // 2. Bitwise Operations (8, 16, 32, 64-bit width)
   // ----------------------------------------------------
   static BitwiseResult calculateBitwise({
-    required BigInt a,
+    BigInt? a,
     BigInt? b,
+    String? aString,
+    String? bString,
     required String operation, // 'AND', 'OR', 'XOR', 'NOT', 'LSHIFT', 'RSHIFT'
-    required int bitWidth, // 8, 16, 32, 64
+    int? bitWidth, // 8, 16, 32, 64
+    int? wordSize,
   }) {
-    if (![8, 16, 32, 64].contains(bitWidth)) {
+    final effectiveBitWidth = bitWidth ?? wordSize ?? 32;
+    if (![8, 16, 32, 64].contains(effectiveBitWidth)) {
       throw ArgumentError('Bit width must be 8, 16, 32, or 64 bits');
     }
 
-    final BigInt mask = (BigInt.one << bitWidth) - BigInt.one;
-    final BigInt maskedA = a & mask;
-    BigInt? maskedB = b != null ? (b & mask) : null;
+    BigInt parseVal(dynamic v) {
+      if (v is BigInt) return v;
+      final s = v.toString().trim();
+      if (s.startsWith('0x') || s.startsWith('0X')) {
+        return BigInt.parse(s.substring(2), radix: 16);
+      }
+      return BigInt.parse(s);
+    }
+
+    final effectiveA = a ?? parseVal(aString ?? '0');
+    final effectiveB = b ?? (bString != null ? parseVal(bString) : null);
+
+    final BigInt mask = (BigInt.one << effectiveBitWidth) - BigInt.one;
+    final BigInt maskedA = effectiveA & mask;
+    BigInt? maskedB = effectiveB != null ? (effectiveB & mask) : null;
     BigInt res;
     String breakdown = '';
 
-    final aBin = maskedA.toRadixString(2).padLeft(bitWidth, '0');
+    final aBin = maskedA.toRadixString(2).padLeft(effectiveBitWidth, '0');
     final bBin = maskedB != null
-        ? maskedB.toRadixString(2).padLeft(bitWidth, '0')
+        ? maskedB.toRadixString(2).padLeft(effectiveBitWidth, '0')
         : '';
 
     switch (operation.toUpperCase()) {
       case 'AND':
-        if (b == null) throw ArgumentError('Operand B is required for AND');
+        if (effectiveB == null) throw ArgumentError('Operand B is required for AND');
         res = (maskedA & maskedB!) & mask;
-        final resBin = res.toRadixString(2).padLeft(bitWidth, '0');
+        final resBin = res.toRadixString(2).padLeft(effectiveBitWidth, '0');
         breakdown = 'A:   $aBin\nB:   $bBin\nAND: $resBin';
         break;
       case 'OR':
-        if (b == null) throw ArgumentError('Operand B is required for OR');
+        if (effectiveB == null) throw ArgumentError('Operand B is required for OR');
         res = (maskedA | maskedB!) & mask;
-        final resBin = res.toRadixString(2).padLeft(bitWidth, '0');
+        final resBin = res.toRadixString(2).padLeft(effectiveBitWidth, '0');
         breakdown = 'A:  $aBin\nB:  $bBin\nOR: $resBin';
         break;
       case 'XOR':
-        if (b == null) throw ArgumentError('Operand B is required for XOR');
+        if (effectiveB == null) throw ArgumentError('Operand B is required for XOR');
         res = (maskedA ^ maskedB!) & mask;
-        final resBin = res.toRadixString(2).padLeft(bitWidth, '0');
+        final resBin = res.toRadixString(2).padLeft(effectiveBitWidth, '0');
         breakdown = 'A:   $aBin\nB:   $bBin\nXOR: $resBin';
         break;
       case 'NOT':
         res = (~maskedA) & mask;
-        final resBin = res.toRadixString(2).padLeft(bitWidth, '0');
+        final resBin = res.toRadixString(2).padLeft(effectiveBitWidth, '0');
         breakdown = 'A:   $aBin\nNOT: $resBin';
         break;
       case 'LSHIFT':
-        if (b == null) {
+        if (effectiveB == null) {
           throw ArgumentError('Shift count B is required for LSHIFT');
         }
-        final shift = b.toInt();
-        if (shift < 0 || shift > bitWidth * 2) {
+        final shift = effectiveB.toInt();
+        if (shift < 0 || shift > effectiveBitWidth * 2) {
           throw ArgumentError('Invalid shift count: $shift');
         }
         res = (maskedA << shift) & mask;
-        final resBin = res.toRadixString(2).padLeft(bitWidth, '0');
+        final resBin = res.toRadixString(2).padLeft(effectiveBitWidth, '0');
         breakdown = 'A:       $aBin\n<< $shift:   $resBin';
         break;
       case 'RSHIFT':
-        if (b == null) {
+        if (effectiveB == null) {
           throw ArgumentError('Shift count B is required for RSHIFT');
         }
-        final shift = b.toInt();
-        if (shift < 0 || shift > bitWidth * 2) {
+        final shift = effectiveB.toInt();
+        if (shift < 0 || shift > effectiveBitWidth * 2) {
           throw ArgumentError('Invalid shift count: $shift');
         }
         res = (maskedA >> shift) & mask;
-        final resBin = res.toRadixString(2).padLeft(bitWidth, '0');
+        final resBin = res.toRadixString(2).padLeft(effectiveBitWidth, '0');
         breakdown = 'A:       $aBin\n>> $shift:   $resBin';
         break;
       default:
         throw ArgumentError('Unknown bitwise operation: $operation');
     }
 
-    final hexPad = (bitWidth / 4).ceil();
+    final hexPad = (effectiveBitWidth / 4).ceil();
     final hexStr =
         '0x${res.toRadixString(16).toUpperCase().padLeft(hexPad, '0')}';
-    final binStr = res.toRadixString(2).padLeft(bitWidth, '0');
+    final binStr = res.toRadixString(2).padLeft(effectiveBitWidth, '0');
 
     return BitwiseResult(
-      a: a,
-      b: b,
+      a: effectiveA,
+      b: effectiveB,
       operation: operation,
-      bitWidth: bitWidth,
+      bitWidth: effectiveBitWidth,
       result: res,
       binaryBreakdown: breakdown,
       hexResult: hexStr,

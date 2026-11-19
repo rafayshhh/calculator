@@ -58,7 +58,7 @@ class _BitwiseScreenState extends ConsumerState<BitwiseScreen> {
 
       final stateJson = jsonEncode({'valA': _valA, 'valB': _valB, 'op': _op, 'wordSize': _wordSize});
       ref.read(historyProvider.notifier).add(
-        'Bitwise: $_valA $_op \${_op == "NOT" ? "" : _valB}',
+        'Bitwise: $_valA $_op ${_op == "NOT" ? "" : _valB}',
         res.decimal,
         toolRoute: '/tools/developer/bitwise',
         toolStateJson: stateJson,
@@ -143,8 +143,8 @@ class _BitwiseScreenState extends ConsumerState<BitwiseScreen> {
             value: _result!.decimal,
             secondaryLabel: 'Hexadecimal',
             secondaryValue: _result!.hexadecimal,
-            formula: '$_valA $_op \${_op == "NOT" ? "" : _valB}',
-            substitution: 'Binary: \${_result!.binary}',
+            formula: '$_valA $_op ${_op == "NOT" ? "" : _valB}',
+            substitution: 'Binary: ${_result!.binary}',
             onShare: () {},
           ),
           const SizedBox(height: KSpacing.md),

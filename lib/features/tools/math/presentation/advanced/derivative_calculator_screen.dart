@@ -76,14 +76,14 @@ class _DerivativeCalculatorScreenState extends ConsumerState<DerivativeCalculato
     return ToolPageScaffold(
       title: 'Numerical & Polynomial Derivative',
       description: 'First and second order derivatives with concavity analysis',
-      formula: 'f'(x) ≈ [f(x+h) - f(x-h)] / (2h), f''(x) ≈ [f(x+h) - 2f(x) + f(x-h)] / h²',
+      formula: "f'(x) ≈ [f(x+h) - f(x-h)] / (2h), f''(x) ≈ [f(x+h) - 2f(x) + f(x-h)] / h²",
       onReset: _reset,
-      onSave: () => _logHistory('d/dx($polyStr) at x=$x', 'f'=$d1, f''=$d2'),
+      onSave: () => _logHistory('d/dx($polyStr) at x=$x', "f'=$d1, f''=$d2"),
       children: [
         ResultDisplayCard(
           title: 'Result',
-          value: 'f'(x) = ${d1.toStringAsFixed(4)}',
-          details: 'P(x) = $polyStr\nP'(x) = $derivStr\nf($x) = ${fVal.toStringAsFixed(4)}\nf''($x) = ${d2.toStringAsFixed(4)}',
+          value: "f'(x) = ${d1.toStringAsFixed(4)}",
+          details: "P(x) = $polyStr\nP'(x) = $derivStr\nf($x) = ${fVal.toStringAsFixed(4)}\nf''($x) = ${d2.toStringAsFixed(4)}",
         ),
         const SizedBox(height: KSpacing.lg),
           PremiumNumericField(

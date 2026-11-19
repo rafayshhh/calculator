@@ -9,6 +9,7 @@ class KFormulaCard extends StatelessWidget {
   final String formula;
   final String? substitution;
   final String? notes;
+  final String? description;
 
   const KFormulaCard({
     super.key,
@@ -16,6 +17,7 @@ class KFormulaCard extends StatelessWidget {
     required this.formula,
     this.substitution,
     this.notes,
+    this.description,
   });
 
   @override
@@ -60,10 +62,10 @@ class KFormulaCard extends StatelessWidget {
               ),
             ),
           ],
-          if (notes != null) ...[
+          if (notes != null || description != null) ...[
             const SizedBox(height: KSpacing.xs),
             Text(
-              notes!,
+              (notes ?? description)!,
               style: TextStyle(
                 fontSize: 12,
                 fontStyle: FontStyle.italic,

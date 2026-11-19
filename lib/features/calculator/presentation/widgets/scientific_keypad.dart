@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/k_spacing.dart';
 import '../../../../core/widgets/k_calculator_button.dart';
+import '../../domain/math_engine.dart';
 import '../../providers/calculator_provider.dart';
 
 class ScientificKeypad extends StatelessWidget {

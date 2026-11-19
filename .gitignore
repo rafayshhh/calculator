@@ -19,3 +19,4 @@ node_modules/
 
 # Local configuration
 *.local
+android/key.properties

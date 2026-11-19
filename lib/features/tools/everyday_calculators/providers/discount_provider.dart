@@ -73,8 +73,8 @@ class DiscountNotifier extends StateNotifier<DiscountState> {
 
     try {
       final res = EverydayEngine.calculateDiscount(
-        originalPrice: orig,
-        discountPercentage: disc,
+        orig,
+        disc,
       );
 
       state = state.copyWith(

@@ -48,8 +48,8 @@ class _DateDifferenceScreenState extends ConsumerState<DateDifferenceScreen> {
     });
 
     ref.read(historyProvider.notifier).add(
-      'Date Difference: \${res.formattedSummary}',
-      '\${res.totalDays} Days',
+      'Date Difference: ${res.formattedSummary}',
+      '${res.totalDays} Days',
       toolRoute: '/tools/date_time/date_difference',
       toolStateJson: stateJson,
     );
@@ -123,15 +123,15 @@ class _DateDifferenceScreenState extends ConsumerState<DateDifferenceScreen> {
             label: 'Elapsed Time',
             value: _result!.formattedSummary,
             secondaryLabel: 'Total Days',
-            secondaryValue: '\${_result!.totalDays} days',
+            secondaryValue: '${_result!.totalDays} days',
             formula: 'Difference = EndDate - StartDate',
-            substitution: '\${_format(_startDate)} to \${_format(_endDate)} = \${_result!.totalDays} days',
+            substitution: '${_format(_startDate)} to ${_format(_endDate)} = ${_result!.totalDays} days',
             onShare: () {},
           ),
           const SizedBox(height: KSpacing.md),
-          KStatRow(label: 'Total Weeks', value: '\${_result!.totalWeeks} weeks'),
+          KStatRow(label: 'Total Weeks', value: '${_result!.totalWeeks} weeks'),
           const SizedBox(height: KSpacing.xs),
-          KStatRow(label: 'Total Hours', value: '\${_result!.totalHours} hours'),
+          KStatRow(label: 'Total Hours', value: '${_result!.totalHours} hours'),
         ],
       ],
     );

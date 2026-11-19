@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../constants/k_colors.dart';
 import '../constants/k_spacing.dart';
 import 'k_page_container.dart';
+import 'k_formula_card.dart';
 import 'specialized_tool_header.dart';
 import 'related_tools_section.dart';
 import '../../features/favorites/providers/favorites_provider.dart';
@@ -16,12 +17,16 @@ class ToolPageScaffold extends ConsumerWidget {
   final String? toolId;
   final String title;
   final String description;
-  final IconData icon;
+  final IconData? icon;
   final String? categoryText;
-  final VoidCallback onBack;
-  final VoidCallback onRefresh;
-  final List<Widget> inputs;
-  final List<Widget> results;
+  final VoidCallback? onBack;
+  final VoidCallback? onRefresh;
+  final VoidCallback? onReset;
+  final VoidCallback? onSave;
+  final String? formula;
+  final List<Widget>? inputs;
+  final List<Widget>? results;
+  final List<Widget>? children;
   final Widget? actionButton;
   final Widget? formulaCard;
   final Widget? breakdownCard;
@@ -34,12 +39,16 @@ class ToolPageScaffold extends ConsumerWidget {
     this.toolId,
     required this.title,
     required this.description,
-    required this.icon,
+    this.icon,
     this.categoryText,
-    required this.onBack,
-    required this.onRefresh,
-    required this.inputs,
-    required this.results,
+    this.onBack,
+    this.onRefresh,
+    this.onReset,
+    this.onSave,
+    this.formula,
+    this.inputs,
+    this.results,
+    this.children,
     this.actionButton,
     this.formulaCard,
     this.breakdownCard,
@@ -51,7 +60,9 @@ class ToolPageScaffold extends ConsumerWidget {
   String _deriveToolId() {
     if (toolId != null && toolId!.isNotEmpty) return toolId!;
     final match = ToolRegistry.tools.where(
-      (t) => t.title.toLowerCase() == title.toLowerCase() || t.description.toLowerCase() == description.toLowerCase(),
+      (t) =>
+          t.title.toLowerCase() == title.toLowerCase() ||
+          t.description.toLowerCase() == description.toLowerCase(),
     ).firstOrNull;
     return match?.id ?? '';
   }
@@ -87,12 +98,27 @@ class ToolPageScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final effectiveToolId = _deriveToolId();
     final effectiveCategoryText = _deriveCategoryText();
+    final effectiveIcon = icon ?? Icons.calculate_outlined;
+    final effectiveBack = onBack ?? () => Navigator.of(context).maybePop();
+    final effectiveRefresh = onRefresh ?? onReset ?? () {};
+
+    Widget? effectiveFormulaCard = formulaCard;
+    if (effectiveFormulaCard == null &&
+        formula != null &&
+        formula!.trim().isNotEmpty) {
+      effectiveFormulaCard = KFormulaCard(formula: formula!);
+    }
+
+    final effectiveInputs = inputs ?? const [];
+    final effectiveResults = results ?? const [];
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textMutedColor = isDark ? KColors.textMutedDark : KColors.textMutedLight;
+    final textMutedColor =
+        isDark ? KColors.textMutedDark : KColors.textMutedLight;
 
-    final isFavorite = effectiveToolId.isNotEmpty && ref.watch(favoritesProvider).contains(effectiveToolId);
+    final isFavorite = effectiveToolId.isNotEmpty &&
+        ref.watch(favoritesProvider).contains(effectiveToolId);
 
     return KPageContainer(
       appBar: AppBar(
@@ -103,7 +129,7 @@ class ToolPageScaffold extends ConsumerWidget {
           button: true,
           child: IconButton(
             icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: onBack,
+            onPressed: effectiveBack,
           ),
         ),
         actions: [
@@ -115,16 +141,32 @@ class ToolPageScaffold extends ConsumerWidget {
                 tooltip: isFavorite ? 'Favorited' : 'Favorite',
                 icon: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
-                  transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+                  transitionBuilder: (child, anim) =>
+                      ScaleTransition(scale: anim, child: child),
                   child: Icon(
-                    isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
+                    isFavorite
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded,
                     key: ValueKey<bool>(isFavorite),
-                    color: isFavorite ? const Color(0xFFFFB300) : textMutedColor,
+                    color:
+                        isFavorite ? const Color(0xFFFFB300) : textMutedColor,
                   ),
                 ),
                 onPressed: () {
-                  ref.read(favoritesProvider.notifier).toggleFavorite(effectiveToolId);
+                  ref
+                      .read(favoritesProvider.notifier)
+                      .toggleFavorite(effectiveToolId);
                 },
+              ),
+            ),
+          if (onSave != null)
+            Semantics(
+              label: 'Save calculation to history',
+              button: true,
+              child: IconButton(
+                tooltip: 'Save to History',
+                icon: const Icon(Icons.bookmark_border_rounded, size: 20),
+                onPressed: onSave,
               ),
             ),
           if (onShare != null)
@@ -152,7 +194,7 @@ class ToolPageScaffold extends ConsumerWidget {
             child: IconButton(
               tooltip: 'Reset calculation',
               icon: const Icon(Icons.refresh_rounded),
-              onPressed: onRefresh,
+              onPressed: effectiveRefresh,
             ),
           ),
         ],
@@ -175,12 +217,22 @@ class ToolPageScaffold extends ConsumerWidget {
                     SpecializedToolHeader(
                       title: title,
                       description: description,
-                      icon: icon,
+                      icon: effectiveIcon,
                       categoryText: effectiveCategoryText,
-                    ).animate().fadeIn(duration: 350.ms).slideY(begin: 0.05, end: 0),
+                    )
+                        .animate()
+                        .fadeIn(duration: 350.ms)
+                        .slideY(begin: 0.05, end: 0),
                     const SizedBox(height: KSpacing.lg),
 
-                    if (isDesktop)
+                    // If children provided, render children mode
+                    if (children != null && children!.isNotEmpty) ...[
+                      if (effectiveFormulaCard != null) ...[
+                        effectiveFormulaCard,
+                        const SizedBox(height: KSpacing.md),
+                      ],
+                      ...children!,
+                    ] else if (isDesktop)
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -191,7 +243,8 @@ class ToolPageScaffold extends ConsumerWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.tune_rounded, size: 16, color: primaryColor),
+                                    Icon(Icons.tune_rounded,
+                                        size: 16, color: primaryColor),
                                     const SizedBox(width: 6),
                                     Text(
                                       'INPUTS',
@@ -205,7 +258,7 @@ class ToolPageScaffold extends ConsumerWidget {
                                   ],
                                 ),
                                 const SizedBox(height: KSpacing.sm),
-                                ...inputs,
+                                ...effectiveInputs,
                                 if (actionButton != null) ...[
                                   const SizedBox(height: KSpacing.md),
                                   actionButton!,
@@ -221,7 +274,8 @@ class ToolPageScaffold extends ConsumerWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.analytics_outlined, size: 16, color: primaryColor),
+                                    Icon(Icons.analytics_outlined,
+                                        size: 16, color: primaryColor),
                                     const SizedBox(width: 6),
                                     Text(
                                       'RESULTS & ANALYSIS',
@@ -235,10 +289,10 @@ class ToolPageScaffold extends ConsumerWidget {
                                   ],
                                 ),
                                 const SizedBox(height: KSpacing.sm),
-                                ...results,
-                                if (formulaCard != null) ...[
+                                ...effectiveResults,
+                                if (effectiveFormulaCard != null) ...[
                                   const SizedBox(height: KSpacing.md),
-                                  formulaCard!,
+                                  effectiveFormulaCard,
                                 ],
                                 if (breakdownCard != null) ...[
                                   const SizedBox(height: KSpacing.md),
@@ -253,7 +307,8 @@ class ToolPageScaffold extends ConsumerWidget {
                       // Mobile Stack
                       Row(
                         children: [
-                          Icon(Icons.tune_rounded, size: 15, color: primaryColor),
+                          Icon(Icons.tune_rounded,
+                              size: 15, color: primaryColor),
                           const SizedBox(width: 6),
                           Text(
                             'INPUTS',
@@ -267,7 +322,7 @@ class ToolPageScaffold extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: KSpacing.sm),
-                      ...inputs,
+                      ...effectiveInputs,
                       if (actionButton != null) ...[
                         const SizedBox(height: KSpacing.md),
                         actionButton!,
@@ -275,7 +330,8 @@ class ToolPageScaffold extends ConsumerWidget {
                       const SizedBox(height: KSpacing.lg),
                       Row(
                         children: [
-                          Icon(Icons.analytics_outlined, size: 15, color: primaryColor),
+                          Icon(Icons.analytics_outlined,
+                              size: 15, color: primaryColor),
                           const SizedBox(width: 6),
                           Text(
                             'RESULTS & ANALYSIS',
@@ -289,10 +345,10 @@ class ToolPageScaffold extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: KSpacing.sm),
-                      ...results,
-                      if (formulaCard != null) ...[
+                      ...effectiveResults,
+                      if (effectiveFormulaCard != null) ...[
                         const SizedBox(height: KSpacing.md),
-                        formulaCard!,
+                        effectiveFormulaCard,
                       ],
                       if (breakdownCard != null) ...[
                         const SizedBox(height: KSpacing.md),

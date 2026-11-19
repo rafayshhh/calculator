@@ -3,15 +3,28 @@ import 'unit_definition.dart';
 import '../data/unit_registry.dart';
 
 class ConversionDetail {
-  final double result;
-  final String formula;
-  final List<SiblingConversion> siblings;
+  final double inputValue;
+  final double outputValue;
+  final String formulaDescription;
+  final List<SiblingConversion> quickConversions;
 
   const ConversionDetail({
-    required this.result,
-    required this.formula,
-    required this.siblings,
-  });
+    double? result,
+    String? formula,
+    List<SiblingConversion>? siblings,
+    double? inputValue,
+    double? outputValue,
+    String? formulaDescription,
+    List<SiblingConversion>? quickConversions,
+  })  : inputValue = inputValue ?? 0.0,
+        outputValue = outputValue ?? result ?? 0.0,
+        formulaDescription = formulaDescription ?? formula ?? '',
+        quickConversions = quickConversions ?? siblings ?? const [];
+
+  double get result => outputValue;
+  String get formula => formulaDescription;
+  List<SiblingConversion> get siblings => quickConversions;
+  String get formattedOutput => UnitConverterEngine.formatResult(outputValue);
 }
 
 class SiblingConversion {
@@ -100,9 +113,25 @@ class UnitConverterEngine {
     }
 
     return ConversionDetail(
-      result: res,
-      formula: formulaText,
-      siblings: siblings,
+      inputValue: value,
+      outputValue: res,
+      formulaDescription: formulaText,
+      quickConversions: siblings,
     );
+  }
+
+  static String formatResult(double val) {
+    if (val.isNaN) return 'NaN';
+    if (val.isInfinite) return val.isNegative ? '-Infinity' : 'Infinity';
+    if (val == 0.0 || val == -0.0) return '0';
+    if (val.abs() >= 1e12 || (val.abs() < 1e-6 && val.abs() > 0)) {
+      return val.toStringAsExponential(6).replaceAll(RegExp(r'\.?0+e'), 'e');
+    }
+    String s = val.toStringAsFixed(8);
+    if (s.contains('.')) {
+      s = s.replaceAll(RegExp(r'0+$'), '');
+      s = s.replaceAll(RegExp(r'\.$'), '');
+    }
+    return s;
   }
 }

@@ -85,7 +85,7 @@ class _ForceScreenState extends ConsumerState<ForceScreen> {
     return ToolPageScaffold(
       toolId: 'force',
       title: 'Force Calculator',
-      description: 'Compute net force according to Newton's Second Law of Motion (F = ma).',
+      description: "Compute net force according to Newton's Second Law of Motion (F = ma).",
       icon: Icons.fitness_center_rounded,
       onBack: () => context.pop(),
       onRefresh: _reset,

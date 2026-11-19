@@ -24,7 +24,7 @@ class _UnixTimestampScreenState extends ConsumerState<UnixTimestampScreen> {
   @override
   void initState() {
     super.initState();
-    _secController.text = '\${DateTime.now().millisecondsSinceEpoch ~/ 1000}';
+    _secController.text = '${DateTime.now().millisecondsSinceEpoch ~/ 1000}';
     _convertFromSec();
   }
 
@@ -49,10 +49,10 @@ class _UnixTimestampScreenState extends ConsumerState<UnixTimestampScreen> {
       toolId: 'unix_timestamp',
       title: 'Unix Timestamp Converter',
       description: 'Convert between Unix epoch integer seconds/milliseconds and human date strings.',
-      icon: Icons.history_toggle_drop_rounded,
+      icon: Icons.access_time_rounded,
       onBack: () => context.pop(),
       onRefresh: () {
-        _secController.text = '\${DateTime.now().millisecondsSinceEpoch ~/ 1000}';
+        _secController.text = '${DateTime.now().millisecondsSinceEpoch ~/ 1000}';
         _convertFromSec();
       },
       inputs: [
@@ -73,11 +73,11 @@ class _UnixTimestampScreenState extends ConsumerState<UnixTimestampScreen> {
           secondaryLabel: 'Local Time',
           secondaryValue: _dateTime.toLocal().toIso8601String().replaceAll('T', ' ').split('.').first,
           formula: 'Epoch = Seconds since 1970-01-01 00:00:00 UTC',
-          substitution: '\${_secController.text} = \${_dateTime.toIso8601String()}',
+          substitution: '${_secController.text} = ${_dateTime.toIso8601String()}',
           onShare: () {},
         ),
         const SizedBox(height: KSpacing.md),
-        KStatRow(label: 'Milliseconds (ms)', value: '\${_dateTime.millisecondsSinceEpoch}'),
+        KStatRow(label: 'Milliseconds (ms)', value: '${_dateTime.millisecondsSinceEpoch}'),
       ],
     );
   }

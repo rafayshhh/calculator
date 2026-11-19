@@ -32,6 +32,9 @@ class FractionResult {
     required this.mixedFraction,
     required this.decimal,
   });
+
+  double get decimalValue => decimal;
+  bool get isProper => numerator.abs() < denominator.abs();
 }
 
 class MathUtilitiesEngine {

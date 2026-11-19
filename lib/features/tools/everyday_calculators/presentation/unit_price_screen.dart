@@ -76,7 +76,7 @@ class _UnitPriceScreenState extends ConsumerState<UnitPriceScreen> {
       final stateJson = jsonEncode({'priceA': _priceA, 'qtyA': _qtyA, 'priceB': _priceB, 'qtyB': _qtyB});
       ref.read(historyProvider.notifier).add(
         'Unit Price: \$$_priceA / $_qtyA units',
-        '\$\${ua.toStringAsFixed(4)}/unit',
+        '\$${ua.toStringAsFixed(4)}/unit',
         toolRoute: '/tools/everyday/unit_price',
         toolStateJson: stateJson,
       );
@@ -105,10 +105,10 @@ class _UnitPriceScreenState extends ConsumerState<UnitPriceScreen> {
     if (_unitA != null && _unitB != null) {
       if (_unitA! < _unitB!) {
         final diff = ((_unitB! - _unitA!) / _unitB!) * 100;
-        bestDeal = 'Option A is cheaper by \${diff.toStringAsFixed(1)}%';
+        bestDeal = 'Option A is cheaper by ${diff.toStringAsFixed(1)}%';
       } else if (_unitB! < _unitA!) {
         final diff = ((_unitA! - _unitB!) / _unitA!) * 100;
-        bestDeal = 'Option B is cheaper by \${diff.toStringAsFixed(1)}%';
+        bestDeal = 'Option B is cheaper by ${diff.toStringAsFixed(1)}%';
       } else {
         bestDeal = 'Both options have identical unit pricing';
       }
@@ -188,9 +188,9 @@ class _UnitPriceScreenState extends ConsumerState<UnitPriceScreen> {
         else if (_unitA != null) ...[
           ResultDisplayCard(
             label: 'Option A Unit Price',
-            value: '\$\${_unitA!.toStringAsFixed(4)} / unit',
+            value: '\$${_unitA!.toStringAsFixed(4)} / unit',
             secondaryLabel: _unitB != null ? 'Option B Unit Price' : null,
-            secondaryValue: _unitB != null ? '\$\${_unitB!.toStringAsFixed(4)} / unit' : null,
+            secondaryValue: _unitB != null ? '\$${_unitB!.toStringAsFixed(4)} / unit' : null,
             formula: 'Unit Price = Total Price / Quantity',
             substitution: bestDeal,
             onShare: () {},

@@ -83,8 +83,8 @@ class _SpringForceScreenState extends ConsumerState<SpringForceScreen> {
   Widget build(BuildContext context) {
     return ToolPageScaffold(
       toolId: 'spring_force',
-      title: 'Spring Force (Hooke's Law)',
-      description: 'Calculate restoring elastic force (F = -kx) from Hooke's Law.',
+      title: "Spring Force (Hooke's Law)",
+      description: "Calculate restoring elastic force (F = -kx) from Hooke's Law.",
       icon: Icons.all_inclusive_rounded,
       onBack: () => context.pop(),
       onRefresh: _reset,

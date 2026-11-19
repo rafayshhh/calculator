@@ -14,7 +14,14 @@ import '../providers/unit_converter_provider.dart';
 import 'widgets/category_selector.dart';
 
 class UnitConverterScreen extends ConsumerStatefulWidget {
-  const UnitConverterScreen({super.key});
+  final String? categorySlug;
+  final String? initialStateJson;
+
+  const UnitConverterScreen({
+    super.key,
+    this.categorySlug,
+    this.initialStateJson,
+  });
 
   @override
   ConsumerState<UnitConverterScreen> createState() => _UnitConverterScreenState();

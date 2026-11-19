@@ -25,6 +25,31 @@ class MathEngine {
 class CalculatorEngine {
   CalculatorEngine._();
 
+  static double evaluateNumeric(
+    String expression, {
+    Map<String, double> variables = const {},
+    AngleMode angleMode = AngleMode.degrees,
+  }) {
+    String expr = expression.trim();
+    if (expr.isEmpty) return 0.0;
+
+    for (final entry in variables.entries) {
+      final valStr = '(${entry.value})';
+      expr = expr.replaceAllMapped(
+        RegExp(r'(\d)' + RegExp.escape(entry.key)),
+        (m) => '${m[1]}*$valStr',
+      );
+      expr = expr.replaceAllMapped(
+        RegExp(r'(\))' + RegExp.escape(entry.key)),
+        (m) => '${m[1]}*$valStr',
+      );
+      expr = expr.replaceAll(entry.key, valStr);
+    }
+
+    final parser = _MathParser(expr, angleMode);
+    return parser.parse();
+  }
+
   static String calculate(
     String expression, {
     AngleMode angleMode = AngleMode.degrees,

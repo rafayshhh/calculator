@@ -9,10 +9,11 @@ class FinanceEngine {
     double? annualRatePercent,
     double? timeYears,
     int compoundsPerYear = 12,
+    int? compoundingFrequency,
     double? futureValue,
     String solveFor = 'futureValue',
   }) {
-    final n = compoundsPerYear.toDouble();
+    final n = (compoundingFrequency ?? compoundsPerYear).toDouble();
 
     if (solveFor == 'principal' && futureValue != null && annualRatePercent != null && timeYears != null) {
       final r = (annualRatePercent / 100.0) / n;
@@ -97,10 +98,12 @@ class FinanceEngine {
   static Map<String, dynamic> calculateLoan({
     required double principal,
     required double annualRatePercent,
-    required double termYears,
+    double? termYears,
+    double? timeYears,
     int paymentsPerYear = 12,
   }) {
-    final n = termYears * paymentsPerYear;
+    final effectiveTerm = termYears ?? timeYears ?? 1.0;
+    final n = effectiveTerm * paymentsPerYear;
     if (annualRatePercent == 0) {
       final pmt = n > 0 ? principal / n : 0.0;
       return {
@@ -122,17 +125,35 @@ class FinanceEngine {
     };
   }
 
+  static Map<String, dynamic> calculateLoanPayment({
+    required double principal,
+    required double annualRatePercent,
+    double? termYears,
+    double? timeYears,
+    int paymentsPerYear = 12,
+  }) =>
+      calculateLoan(
+        principal: principal,
+        annualRatePercent: annualRatePercent,
+        termYears: termYears,
+        timeYears: timeYears,
+        paymentsPerYear: paymentsPerYear,
+      );
+
   /// Mortgage
   static Map<String, dynamic> calculateMortgage({
     required double homePrice,
-    required double downPaymentPercent,
+    double? downPaymentPercent,
+    double? downPayment,
     required double annualRatePercent,
     required double termYears,
     double annualPropertyTax = 0,
     double annualHomeInsurance = 0,
     double monthlyHoa = 0,
   }) {
-    final loanAmount = homePrice * (1.0 - (downPaymentPercent / 100.0));
+    final effectiveDown = downPaymentPercent ??
+        (downPayment != null && homePrice > 0 ? (downPayment / homePrice) * 100.0 : 0.0);
+    final loanAmount = homePrice * (1.0 - (effectiveDown / 100.0));
     final loanRes = calculateLoan(
       principal: loanAmount,
       annualRatePercent: annualRatePercent,
@@ -203,12 +224,14 @@ class FinanceEngine {
   static Map<String, dynamic> calculateBreakEven({
     required double fixedCosts,
     required double variableCostPerUnit,
-    required double unitPrice,
+    double? unitPrice,
+    double? pricePerUnit,
   }) {
-    final contributionMargin = unitPrice - variableCostPerUnit;
+    final effectivePrice = pricePerUnit ?? unitPrice ?? 0.0;
+    final contributionMargin = effectivePrice - variableCostPerUnit;
     final breakEvenUnits = contributionMargin > 0 ? fixedCosts / contributionMargin : 0.0;
-    final breakEvenRevenue = breakEvenUnits * unitPrice;
-    final contributionMarginRatio = unitPrice > 0 ? (contributionMargin / unitPrice) * 100.0 : 0.0;
+    final breakEvenRevenue = breakEvenUnits * effectivePrice;
+    final contributionMarginRatio = effectivePrice > 0 ? (contributionMargin / effectivePrice) * 100.0 : 0.0;
 
     return {
       'contributionMargin': contributionMargin,
@@ -256,15 +279,20 @@ class FinanceEngine {
 
   /// ROI
   static Map<String, dynamic> calculateRoi({
-    required double totalCost,
-    required double totalGain,
-    required double investmentYears,
+    double? totalCost,
+    double? totalGain,
+    double? investmentYears,
+    double? initialInvestment,
+    double? finalValue,
   }) {
-    if (totalCost <= 0) throw ArgumentError('Total cost must be positive');
-    final netReturn = totalGain - totalCost;
-    final roiPercent = (netReturn / totalCost) * 100.0;
-    final annualizedRoiPercent = investmentYears > 0
-        ? (math.pow(totalGain / totalCost, 1.0 / investmentYears) - 1.0) * 100.0
+    final cost = totalCost ?? initialInvestment ?? 0.0;
+    final gain = totalGain ?? finalValue ?? 0.0;
+    final years = investmentYears ?? 1.0;
+    if (cost <= 0) throw ArgumentError('Total cost must be positive');
+    final netReturn = gain - cost;
+    final roiPercent = (netReturn / cost) * 100.0;
+    final annualizedRoiPercent = years > 0 && gain > 0
+        ? (math.pow(gain / cost, 1.0 / years) - 1.0) * 100.0
         : roiPercent;
 
     return {
@@ -297,12 +325,14 @@ class FinanceEngine {
   /// Currency
   static Map<String, dynamic> convertCurrency({
     required double amount,
-    required double sourceToTargetRate,
+    double? sourceToTargetRate,
+    double? exchangeRate,
     String sourceCode = 'USD',
     String targetCode = 'EUR',
   }) {
-    final converted = amount * sourceToTargetRate;
-    final inverse = sourceToTargetRate != 0 ? 1.0 / sourceToTargetRate : 0.0;
+    final rate = exchangeRate ?? sourceToTargetRate ?? 1.0;
+    final converted = amount * rate;
+    final inverse = rate != 0 ? 1.0 / rate : 0.0;
     return {
       'convertedAmount': converted,
       'inverseRate': inverse,

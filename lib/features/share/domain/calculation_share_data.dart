@@ -66,6 +66,7 @@ class CalculationShareData {
   final DateTime? timestamp;
   final KColorTheme? colorTheme;
   final Brightness? brightness;
+  final Widget? customResultWidget;
 
   const CalculationShareData({
     required this.title,
@@ -83,6 +84,7 @@ class CalculationShareData {
     this.timestamp,
     this.colorTheme,
     this.brightness,
+    this.customResultWidget,
   });
 
   /// Factory helper for creating standard calculator share payloads.

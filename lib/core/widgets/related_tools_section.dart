@@ -15,7 +15,10 @@ class RelatedToolsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final related = ToolsRegistry.getRelatedTools(toolId);
+    if (toolId == null) {
+      return const SizedBox.shrink();
+    }
+    final related = ToolsRegistry.getRelatedTools(toolId!);
     if (related.isEmpty) {
       return const SizedBox.shrink();
     }

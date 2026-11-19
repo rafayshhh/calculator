@@ -36,7 +36,7 @@ class _TimeDifferenceScreenState extends ConsumerState<TimeDifferenceScreen> {
     }
   }
 
-  String _formatTod(TimeOfDay t) => '\${t.hour.toString().padLeft(2, '0')}:\${t.minute.toString().padLeft(2, '0')}';
+  String _formatTod(TimeOfDay t) => '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +87,9 @@ class _TimeDifferenceScreenState extends ConsumerState<TimeDifferenceScreen> {
           label: 'Elapsed Time',
           value: '\$hours hrs, \$minutes mins',
           secondaryLabel: 'Decimal Hours',
-          secondaryValue: '\${(diffMin / 60.0).toStringAsFixed(2)} hrs',
+          secondaryValue: '${(diffMin / 60.0).toStringAsFixed(2)} hrs',
           formula: 'Duration = Time₂ - Time₁',
-          substitution: '\${_formatTod(_t1)} to \${_formatTod(_t2)} = \$hours h \$minutes m',
+          substitution: '${_formatTod(_t1)} to ${_formatTod(_t2)} = \$hours h \$minutes m',
           onShare: () {},
         ),
         const SizedBox(height: KSpacing.md),

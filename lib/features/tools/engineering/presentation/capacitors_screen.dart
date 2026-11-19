@@ -148,7 +148,7 @@ class _CapacitorsScreenState extends ConsumerState<CapacitorsScreen> {
                     controller: ctrl,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
-                      labelText: 'Capacitor C\${idx + 1}',
+                      labelText: 'Capacitor C${idx + 1}',
                       suffixText: 'µF',
                       border: const OutlineInputBorder(),
                     ),

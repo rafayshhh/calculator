@@ -53,6 +53,8 @@ class HistoryNotifier extends Notifier<List<HistoryEntryV2>> {
       state = const [];
     }
   }
+
+  Future<void> clearAll() => clear();
 }
 
 final historyRepositoryProvider = Provider<HistoryRepository>((ref) {
