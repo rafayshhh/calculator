@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/k_colors.dart';
 import '../../../core/constants/k_spacing.dart';
-import '../../../core/constants/k_radius.dart';
 import '../../../core/widgets/k_glass_card.dart';
 import '../../../core/widgets/k_tool_card.dart';
 import '../domain/tool_definition.dart';
@@ -62,7 +61,7 @@ class ToolsScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '65+ Specialized Calculators',
+                          '150+ Specialized Calculators',
                           style: TextStyle(
                             color: textPrimary,
                             fontWeight: FontWeight.bold,

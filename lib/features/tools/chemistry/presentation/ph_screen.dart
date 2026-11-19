@@ -129,8 +129,8 @@ class _PhScreenState extends ConsumerState<PhScreen> {
           ResultDisplayCard(
             label: 'Solution pH',
             value: _ph!.toStringAsFixed(2),
-            secondaryLabel: 'Solution Status',
-            secondaryValue: _status ?? '',
+            secondaryLabel: 'Hydroxide Potential (pOH)',
+            secondaryValue: _poh!.toStringAsFixed(2),
             formula: 'pH = -log₁₀($_hConcentration)',
             substitution: 'pH = ${_ph!.toStringAsFixed(2)} | pOH = ${_poh!.toStringAsFixed(2)}',
             onShare: () {},

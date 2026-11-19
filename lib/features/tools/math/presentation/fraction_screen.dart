@@ -123,10 +123,10 @@ class _FractionScreenState extends ConsumerState<FractionScreen> {
           ),
           const SizedBox(height: KSpacing.md),
           KStatRow(label: 'Proper Fraction', value: _result!.isProper ? 'Yes' : 'No (Improper)'),
-          if (_result!.wholeNumber != null) ...[
-            const SizedBox(height: KSpacing.xs),
-            KStatRow(label: 'Mixed Number Representation', value: '${_result!.wholeNumber} ${_result!.numerator % _result!.denominator}/${_result!.denominator}'),
-          ],
+          ...[
+          const SizedBox(height: KSpacing.xs),
+          KStatRow(label: 'Mixed Number Representation', value: '${_result!.wholeNumber} ${_result!.numerator % _result!.denominator}/${_result!.denominator}'),
+        ],
         ],
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calculator/features/tools/unit_converter/domain/conversion_category.dart';
+import 'package:calculator/features/tools/unit_converter/data/unit_registry.dart';
 import 'package:calculator/features/tools/unit_converter/providers/unit_converter_provider.dart';
 
 void main() {
@@ -19,6 +20,8 @@ void main() {
       final notifier = container.read(unitConverterProvider.notifier);
 
       notifier.setCategory(ConversionCategory.length);
+      final ft = UnitRegistry.findUnitById('l_ft');
+      if (ft != null) notifier.setTargetUnit(ft);
       notifier.setInputValue('100');
 
       var state = container.read(unitConverterProvider);

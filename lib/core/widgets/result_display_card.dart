@@ -5,6 +5,8 @@ import '../constants/k_colors.dart';
 import '../constants/k_spacing.dart';
 import '../constants/k_radius.dart';
 import 'k_glass_card.dart';
+import '../../features/share/domain/calculation_share_data.dart';
+import '../../features/share/presentation/dialogs/share_image_preview_dialog.dart';
 
 class ResultDisplayCard extends StatelessWidget {
   final String label;
@@ -61,37 +63,66 @@ class ResultDisplayCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                label.toUpperCase(),
-                style: TextStyle(
-                  color: isError ? errorColor : primaryColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: isError ? errorColor : primaryColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.1,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (!isError && onCopy == null)
-                IconButton(
-                  icon: const Icon(Icons.copy_rounded, size: 16),
-                  color: textSecondary,
-                  tooltip: 'Copy',
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: displayVal));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Copied to clipboard'),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
-                )
-              else if (onCopy != null)
-                IconButton(
-                  icon: const Icon(Icons.copy_rounded, size: 16),
-                  color: textSecondary,
-                  tooltip: 'Copy',
-                  onPressed: onCopy,
-                ),
+              const SizedBox(width: KSpacing.sm),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (!isError && onCopy == null)
+                    IconButton(
+                      icon: const Icon(Icons.copy_rounded, size: 16),
+                      color: textSecondary,
+                      tooltip: 'Copy',
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: displayVal));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Copied to clipboard'),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      },
+                    )
+                  else if (onCopy != null)
+                    IconButton(
+                      icon: const Icon(Icons.copy_rounded, size: 16),
+                      color: textSecondary,
+                      tooltip: 'Copy',
+                      onPressed: onCopy,
+                    ),
+                  if (!isError)
+                    IconButton(
+                      icon: const Icon(Icons.share_rounded, size: 16),
+                      color: textSecondary,
+                      tooltip: 'Share as Image',
+                      onPressed: onShare ??
+                          () {
+                            ShareImagePreviewDialog.show(
+                              context,
+                              CalculationShareData(
+                                title: label,
+                                expression: formula ?? label,
+                                result: displayVal,
+                                formula: formula,
+                                substitution: substitution,
+                                timestamp: DateTime.now(),
+                              ),
+                            );
+                          },
+                    ),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: KSpacing.xs),
@@ -106,17 +137,20 @@ class ResultDisplayCard extends StatelessWidget {
           if (secondaryLabel != null && secondaryValue != null) ...[
             const SizedBox(height: KSpacing.sm),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   '$secondaryLabel: ',
                   style: TextStyle(color: textSecondary, fontSize: 13),
                 ),
-                Text(
-                  secondaryValue!,
-                  style: TextStyle(
-                    color: textPrimary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Text(
+                    secondaryValue!,
+                    style: TextStyle(
+                      color: textPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],

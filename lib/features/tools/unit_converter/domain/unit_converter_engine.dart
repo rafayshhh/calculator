@@ -56,6 +56,19 @@ class UnitConverterEngine {
       throw ArgumentError('Negative values not supported for unit: ${source.name}');
     }
 
+    // Physical temperature validation (cannot be below absolute zero)
+    if (source.category == ConversionCategory.temperature) {
+      if ((source.id == 'temp_k' || source.id == 'k') && value < 0) {
+        throw ArgumentError('Temperature cannot be below absolute zero (0 K)');
+      }
+      if ((source.id == 'temp_c' || source.id == 'c') && value < -273.15) {
+        throw ArgumentError('Temperature cannot be below absolute zero (-273.15 °C)');
+      }
+      if ((source.id == 'temp_f' || source.id == 'f') && value < -459.67) {
+        throw ArgumentError('Temperature cannot be below absolute zero (-459.67 °F)');
+      }
+    }
+
     if (source.id == target.id) {
       return value;
     }
@@ -98,7 +111,7 @@ class UnitConverterEngine {
       final sFactor = source.baseConversionFactor ?? 1.0;
       final tFactor = target.baseConversionFactor ?? 1.0;
       final factor = sFactor / tFactor;
-      formulaText = '1 ${source.symbol} = $factor ${target.symbol}';
+      formulaText = '1 ${source.symbol} = ${formatResult(factor)} ${target.symbol}';
     }
 
     final categoryUnits = UnitRegistry.getUnitsByCategory(source.category);

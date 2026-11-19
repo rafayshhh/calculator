@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 
 /// Pure-Dart Number Theory & Discrete Mathematics Engine.
 class NumberTheoryEngine {

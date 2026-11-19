@@ -85,7 +85,7 @@ class _AllToolsScreenState extends ConsumerState<AllToolsScreen>
                 controller: _searchController,
                 style: TextStyle(color: textPrimary),
                 decoration: InputDecoration(
-                  hintText: 'Search 65+ tools...',
+                  hintText: 'Search 150+ tools...',
                   hintStyle: TextStyle(color: textSecondary),
                   prefixIcon: Icon(Icons.search_rounded, color: primaryColor),
                   suffixIcon: _searchQuery.isNotEmpty

@@ -5,9 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/k_colors.dart';
 import '../../../../core/constants/k_spacing.dart';
-import '../../../../core/constants/k_radius.dart';
 import '../../../../core/widgets/k_glass_card.dart';
-import '../domain/conversion_category.dart';
 import '../domain/unit_definition.dart';
 import '../data/unit_registry.dart';
 import '../providers/unit_converter_provider.dart';

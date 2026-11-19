@@ -42,13 +42,13 @@ class _ShareImagePreviewDialogState
     final bytes = await ImageShareService.capturePng(_boundaryKey);
     if (bytes != null && mounted) {
       final filename =
-          'kreate_calc_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.png';
+          'calculator_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.png';
       await ImageShareService.shareImageFile(
         context,
         bytes,
         filename,
         text:
-            '${widget.data.title}: ${widget.data.result} #KreateCalculator',
+            '${widget.data.title}: ${widget.data.result} • Calculator',
       );
     }
     if (mounted) {
@@ -64,7 +64,7 @@ class _ShareImagePreviewDialogState
     final bytes = await ImageShareService.capturePng(_boundaryKey);
     if (bytes != null && mounted) {
       final filename =
-          'kreate_calc_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.png';
+          'calculator_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.png';
       await ImageShareService.saveImageToDevice(context, bytes, filename);
     }
     if (mounted) {
@@ -80,7 +80,7 @@ class _ShareImagePreviewDialogState
     final bytes = await ImageShareService.capturePng(_boundaryKey);
     if (bytes != null && mounted) {
       final filename =
-          'kreate_calc_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.png';
+          'calculator_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.png';
       await ImageShareService.saveImageToDevice(context, bytes, filename);
     }
     if (mounted) {

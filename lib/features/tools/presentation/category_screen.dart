@@ -15,7 +15,6 @@ class CategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
     final textSecondary = isDark ? KColors.textSecondaryDark : KColors.textSecondaryLight;
 
     final tools = ToolsRegistry.getToolsByCategory(category);

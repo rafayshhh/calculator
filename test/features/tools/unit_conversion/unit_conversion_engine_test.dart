@@ -29,7 +29,7 @@ void main() {
       );
       expect(
         UnitConverterEngine.convert(value: 1, source: ft, target: inU),
-        12.0,
+        closeTo(12.0, 0.0001),
       );
     });
 

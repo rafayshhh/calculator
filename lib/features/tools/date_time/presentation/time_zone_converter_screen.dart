@@ -50,7 +50,7 @@ class _TimeZoneConverterScreenState extends ConsumerState<TimeZoneConverterScree
       onRefresh: () => setState(() => _utcTime = DateTime.now().toUtc()),
       inputs: [
         DropdownButtonFormField<int>(
-          value: _targetOffset,
+          initialValue: _targetOffset,
           decoration: const InputDecoration(labelText: 'Target Time Zone', border: OutlineInputBorder()),
           items: _zones.entries.map((e) => DropdownMenuItem(value: e.value, child: Text(e.key))).toList(),
           onChanged: (v) {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/k_colors.dart';
+import '../../../core/constants/k_color_theme.dart';
 import '../../../core/constants/k_spacing.dart';
 import '../../../core/constants/kreate_links.dart';
 import '../../../core/services/feedback_service.dart';
@@ -10,6 +11,7 @@ import '../../../core/widgets/k_glass_card.dart';
 import '../../../core/widgets/k_page_container.dart';
 import '../../calculator/domain/math_engine.dart';
 import '../providers/app_settings_provider.dart';
+import '../providers/theme_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -205,6 +207,8 @@ class SettingsScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final feedback = ref.watch(feedbackProvider);
     final appSettings = ref.watch(appSettingsProvider);
+    final themeMode = ref.watch(themeProvider);
+    final colorTheme = ref.watch(colorThemeProvider);
 
     return KPageContainer(
       appBar: AppBar(
@@ -293,7 +297,7 @@ class SettingsScreen extends ConsumerWidget {
                     style: TextStyle(color: textSecondaryColor, fontSize: 12),
                   ),
                   value: appSettings.useThousandsSeparator,
-                  activeColor: primaryColor,
+                  activeThumbColor: primaryColor,
                   onChanged: (val) {
                     FeedbackService.settingChange(feedback);
                     ref
@@ -309,24 +313,233 @@ class SettingsScreen extends ConsumerWidget {
           // 2. APPEARANCE & THEME
           _buildSectionHeader('APPEARANCE & THEME', primaryColor),
           KGlassCard(
-            child: ListTile(
-              leading: Icon(Icons.palette_outlined, color: primaryColor),
-              title: Text(
-                'Theme & Accent Palette',
-                style: TextStyle(
-                  color: textPrimaryColor,
-                  fontWeight: FontWeight.w600,
+            padding: const EdgeInsets.all(KSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Theme Mode Selector Header
+                Row(
+                  children: [
+                    Icon(Icons.brightness_6_rounded, color: primaryColor, size: 20),
+                    const SizedBox(width: KSpacing.sm),
+                    Text(
+                      'Display Mode',
+                      style: TextStyle(
+                        color: textPrimaryColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              subtitle: Text(
-                'Dark, Light, AMOLED & 6 vibrant color themes',
-                style: TextStyle(color: textSecondaryColor, fontSize: 12),
-              ),
-              trailing: const Icon(Icons.chevron_right_rounded, size: 18),
-              onTap: () {
-                FeedbackService.toolSelect(feedback);
-                context.push('/settings/theme');
-              },
+                const SizedBox(height: 4),
+                Text(
+                  'Switch between Light, Dark, or System mode',
+                  style: TextStyle(color: textSecondaryColor, fontSize: 12),
+                ),
+                const SizedBox(height: KSpacing.md),
+                // Light / Dark / System Segmented Control
+                SizedBox(
+                  width: double.infinity,
+                  child: SegmentedButton<ThemeMode>(
+                    segments: const [
+                      ButtonSegment(
+                        value: ThemeMode.system,
+                        icon: Icon(Icons.brightness_auto_rounded, size: 16),
+                        label: Text('System'),
+                      ),
+                      ButtonSegment(
+                        value: ThemeMode.light,
+                        icon: Icon(Icons.light_mode_rounded, size: 16),
+                        label: Text('Light'),
+                      ),
+                      ButtonSegment(
+                        value: ThemeMode.dark,
+                        icon: Icon(Icons.dark_mode_rounded, size: 16),
+                        label: Text('Dark'),
+                      ),
+                    ],
+                    selected: {themeMode},
+                    onSelectionChanged: (Set<ThemeMode> newSelection) {
+                      FeedbackService.settingChange(feedback);
+                      ref
+                          .read(themeProvider.notifier)
+                          .setThemeMode(newSelection.first);
+                    },
+                  ),
+                ),
+                const SizedBox(height: KSpacing.lg),
+                Divider(
+                  color: isDark
+                      ? KColors.glassBorderDark
+                      : KColors.glassBorderLight,
+                  height: 1,
+                ),
+                const SizedBox(height: KSpacing.md),
+                // Color Themes Header
+                Row(
+                  children: [
+                    Icon(Icons.palette_rounded, color: primaryColor, size: 20),
+                    const SizedBox(width: KSpacing.sm),
+                    Text(
+                      'Color Themes',
+                      style: TextStyle(
+                        color: textPrimaryColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Select from 3 signature accent palettes',
+                  style: TextStyle(color: textSecondaryColor, fontSize: 12),
+                ),
+                const SizedBox(height: KSpacing.md),
+                // 3 Color Themes Selector Row
+                Row(
+                  children: [
+                    (
+                      theme: KColorTheme.kreateBlue,
+                      name: 'Electric Cyan',
+                      tag: 'Signature',
+                      color: const Color(0xFF00E5FF),
+                    ),
+                    (
+                      theme: KColorTheme.emeraldGreen,
+                      name: 'Emerald Mint',
+                      tag: 'Nature',
+                      color: const Color(0xFF00E676),
+                    ),
+                    (
+                      theme: KColorTheme.royalPurple,
+                      name: 'Royal Violet',
+                      tag: 'Vibrant',
+                      color: const Color(0xFFB388FF),
+                    ),
+                  ].map((t) {
+                    final isSelected = colorTheme == t.theme;
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(12),
+                          onTap: () {
+                            FeedbackService.settingChange(feedback);
+                            ref
+                                .read(colorThemeProvider.notifier)
+                                .setColorTheme(t.theme);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? t.color.withValues(alpha: 0.15)
+                                  : (isDark
+                                      ? const Color(0xFF1E293B)
+                                      : const Color(0xFFF1F5F9)),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isSelected
+                                    ? t.color
+                                    : (isDark
+                                        ? Colors.white12
+                                        : Colors.black12),
+                                width: isSelected ? 2 : 1,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                    color: t.color,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: t.color.withValues(alpha: 0.4),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: isSelected
+                                      ? const Icon(
+                                          Icons.check_rounded,
+                                          size: 16,
+                                          color: Colors.black,
+                                        )
+                                      : null,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  t.name,
+                                  style: TextStyle(
+                                    color: isSelected
+                                        ? primaryColor
+                                        : textPrimaryColor,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  t.tag,
+                                  style: TextStyle(
+                                    color: textSecondaryColor,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: KSpacing.md),
+                Divider(
+                  color: isDark
+                      ? KColors.glassBorderDark
+                      : KColors.glassBorderLight,
+                  height: 1,
+                ),
+                const SizedBox(height: 4),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.palette_outlined, color: primaryColor),
+                  title: Text(
+                    'Theme & Accent Palette',
+                    style: TextStyle(
+                      color: textPrimaryColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Explore all 6 color themes & AMOLED mode',
+                    style: TextStyle(color: textSecondaryColor, fontSize: 12),
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded, size: 18),
+                  onTap: () {
+                    FeedbackService.toolSelect(feedback);
+                    context.push('/settings/theme');
+                  },
+                ),
+              ],
             ),
           ),
           const SizedBox(height: KSpacing.lg),

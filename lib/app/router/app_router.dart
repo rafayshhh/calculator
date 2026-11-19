@@ -1096,7 +1096,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       ),
                     ],
                   ),
-                  // --- Group: MATH (65 tools) ---
+                  // --- Group: MATH (65 tools / part of 150+ suite) ---
                   GoRoute(
                     path: 'math',
                     builder: (context, state) => const ToolsScreen(),

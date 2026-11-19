@@ -195,7 +195,7 @@ class _StoichiometryScreenState extends ConsumerState<StoichiometryScreen> {
             secondaryLabel: 'Theoretical Moles',
             secondaryValue: '${_yieldMoles!.toStringAsFixed(2)} mol',
             formula: 'n_B = n_A × (b/a)',
-            substitution: 'Yield of $_productFormula = $_reactantMoles mol × ($_productCoeff/$_reactantCoeff) = ${_yieldMoles!.toStringAsFixed(2)} mol',
+            substitution: 'n_$_productFormula = $_reactantMoles mol × ($_productCoeff/$_reactantCoeff) = ${_yieldMoles!.toStringAsFixed(2)} mol',
             onShare: () {},
           ),
           const SizedBox(height: KSpacing.md),

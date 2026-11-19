@@ -136,7 +136,7 @@ class _ConcentrationScreenState extends ConsumerState<ConcentrationScreen> {
             secondaryLabel: 'Parts Per Million (ppm)',
             secondaryValue: '${_formatNum(_massPercent! * 10000)} ppm',
             formula: 'Mass % = (m_solute / m_total) × 100',
-            substitution: 'Mass % = ($_soluteMass / $_totalMass) × 100 = ${_formatNum(_massPercent!)}%',
+            substitution: 'Mass % = ($_soluteMass / $_totalMass) × 100',
             onShare: () {},
           ),
           const SizedBox(height: KSpacing.md),

@@ -146,7 +146,7 @@ class _DilutionScreenState extends ConsumerState<DilutionScreen> {
             secondaryLabel: 'Solvent to Add',
             secondaryValue: '${_formatNum(double.parse(_v2) - _v1Result!)} mL',
             formula: 'V₁ = (M₂ × V₂) / M₁',
-            substitution: 'V₁ = ($_m2 × $_v2) / $_m1 = ${_formatNum(_v1Result!)} mL',
+            substitution: 'V₁ = ($_m2 × $_v2) / $_m1',
             onShare: () {},
           ),
           const SizedBox(height: KSpacing.md),

@@ -154,6 +154,54 @@ class UnitRegistry {
     for (final u in allUnits) {
       if (u.id == id) return u;
     }
+    // Backward compatibility with legacy/alternative ID prefixes
+    const aliasMap = {
+      'time_s': 't_s',
+      'time_min': 't_min',
+      'time_h': 't_h',
+      'time_d': 't_d',
+      'time_wk': 't_wk',
+      'time_mo': 't_mo',
+      'time_yr': 't_yr',
+      's_ms': 's_mps',
+      'pw_w': 'pow_w',
+      'pw_kw': 'pow_kw',
+      'pw_mw': 'pow_mw',
+      'pw_gw': 'pow_gw',
+      'pw_hp': 'pow_hp',
+      'p_w': 'pow_w',
+      'p_kw': 'pow_kw',
+      'p_mw': 'pow_mw',
+      'p_gw': 'pow_gw',
+      'p_hp': 'pow_hp',
+      'd_b': 'ds_b',
+      'd_kb': 'ds_kb',
+      'd_kib': 'ds_kib',
+      'd_mb': 'ds_mb',
+      'd_mib': 'ds_mib',
+      'd_gb': 'ds_gb',
+      'd_gib': 'ds_gib',
+      'd_tb': 'ds_tb',
+      'd_tib': 'ds_tib',
+      'f_hz': 'freq_hz',
+      'f_khz': 'freq_khz',
+      'f_mhz': 'freq_mhz',
+      'f_ghz': 'freq_ghz',
+      'frc_n': 'f_n',
+      'frc_kn': 'f_kn',
+      'frc_lbf': 'f_lbf',
+      'frc_kgf': 'f_kgf',
+      'force_n': 'f_n',
+      'force_kn': 'f_kn',
+      'force_lbf': 'f_lbf',
+      'force_kgf': 'f_kgf',
+    };
+    final resolvedId = aliasMap[id];
+    if (resolvedId != null) {
+      for (final u in allUnits) {
+        if (u.id == resolvedId) return u;
+      }
+    }
     return null;
   }
 

@@ -6,7 +6,7 @@ This roadmap outlines upcoming community-driven milestones for the open-source G
 
 ## 🟢 Version 1.0.0 (Release Candidate)
 - [x] Complete pure-Dart AST expression evaluator with trigonometry, powers, and percentages.
-- [x] 65+ specialized domain tools across Science, Engineering, Math, Finance, and Everyday utilities.
+- [x] 150+ specialized domain tools across Science, Engineering, Math, Finance, and Everyday utilities.
 - [x] 15-category Unit Converter engine.
 - [x] 12-theme matrix with dynamic light/dark mode transitions.
 - [x] 100% offline-first Hive binary persistence with auto-recovery.

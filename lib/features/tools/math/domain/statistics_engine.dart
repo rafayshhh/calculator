@@ -114,6 +114,16 @@ class StatisticsEngine {
     };
   }
 
+  static double _medianOf(List<double> list) {
+    if (list.isEmpty) return 0.0;
+    final count = list.length;
+    if (count % 2 == 1) {
+      return list[count ~/ 2];
+    } else {
+      return (list[(count ~/ 2) - 1] + list[count ~/ 2]) / 2.0;
+    }
+  }
+
   /// Range, Quartiles (Q1, Median, Q3), and IQR
   static Map<String, dynamic> calculateRangeIQR(List<num> dataset) {
     if (dataset.length < 4) {
@@ -121,13 +131,27 @@ class StatisticsEngine {
     }
 
     final sorted = dataset.map((e) => e.toDouble()).toList()..sort();
+    final count = sorted.length;
     final min = sorted.first;
     final max = sorted.last;
     final range = max - min;
 
-    final median = calculatePercentile(sorted, 50);
-    final q1 = calculatePercentile(sorted, 25);
-    final q3 = calculatePercentile(sorted, 75);
+    final median = _medianOf(sorted);
+
+    final List<double> lowerHalf;
+    final List<double> upperHalf;
+    if (count % 2 == 1) {
+      final mid = count ~/ 2;
+      lowerHalf = sorted.sublist(0, mid);
+      upperHalf = sorted.sublist(mid + 1);
+    } else {
+      final mid = count ~/ 2;
+      lowerHalf = sorted.sublist(0, mid);
+      upperHalf = sorted.sublist(mid);
+    }
+
+    final q1 = _medianOf(lowerHalf);
+    final q3 = _medianOf(upperHalf);
     final iqr = q3 - q1;
 
     final lowerOutlierBound = q1 - 1.5 * iqr;

@@ -118,7 +118,7 @@ class _DataTransferScreenState extends ConsumerState<DataTransferScreen> {
             const SizedBox(width: KSpacing.sm),
             Expanded(
               child: DropdownButtonFormField<String>(
-                value: _fileUnit,
+                initialValue: _fileUnit,
                 decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12)),
                 items: ['B', 'KB', 'MB', 'GB', 'TB'].map((u) => DropdownMenuItem(value: u, child: Text(u))).toList(),
                 onChanged: (v) {
@@ -148,7 +148,7 @@ class _DataTransferScreenState extends ConsumerState<DataTransferScreen> {
             const SizedBox(width: KSpacing.sm),
             Expanded(
               child: DropdownButtonFormField<String>(
-                value: _speedUnit,
+                initialValue: _speedUnit,
                 decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12)),
                 items: ['Kbps', 'Mbps', 'Gbps', 'KB/s', 'MB/s', 'GB/s'].map((u) => DropdownMenuItem(value: u, child: Text(u))).toList(),
                 onChanged: (v) {

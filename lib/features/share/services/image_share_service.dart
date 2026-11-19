@@ -83,7 +83,7 @@ class ImageShareService {
     }
   }
 
-  /// Native multi-platform share sheet integration.
+  /// Native multi-platform share sheet integration with web download fallback.
   static Future<bool> shareImageFile(
     BuildContext context,
     Uint8List bytes,
@@ -91,6 +91,28 @@ class ImageShareService {
     String text = 'Calculated with Calculator',
   }) async {
     try {
+      if (kIsWeb) {
+        try {
+          final xFile = XFile.fromData(
+            bytes,
+            name: filename,
+            mimeType: 'image/png',
+          );
+          final result = await SharePlus.instance.share(
+            ShareParams(
+              files: [xFile],
+              text: text,
+            ),
+          );
+          if (result.status == ShareResultStatus.success) {
+            return true;
+          }
+        } catch (_) {
+          // Gracefully fallback to direct browser download on Web Desktop
+        }
+        return await saveImageToDevice(context, bytes, filename);
+      }
+
       final xFile = XFile.fromData(
         bytes,
         name: filename,
@@ -104,16 +126,8 @@ class ImageShareService {
       );
       return result.status == ShareResultStatus.success;
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Platform share sheet could not be opened.'),
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-      return false;
+      // In case of any unexpected platform error, fallback to device save
+      return await saveImageToDevice(context, bytes, filename);
     }
   }
 }
