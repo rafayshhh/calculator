@@ -8,7 +8,6 @@ import '../../../../../core/widgets/tool_page_scaffold.dart';
 import '../../../../../core/widgets/premium_numeric_field.dart';
 import '../../../../../core/widgets/result_display_card.dart';
 import '../../../../history/providers/history_provider.dart';
-import '../../domain/calculus_engine.dart';
 
 class TaylorSeriesScreen extends ConsumerStatefulWidget {
   final String? initialStateJson;

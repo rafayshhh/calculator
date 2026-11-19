@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/k_spacing.dart';
-import '../../../../core/widgets/k_formula_card.dart';
 import '../../../../core/widgets/premium_numeric_field.dart';
 import '../../../../core/widgets/result_display_card.dart';
 import '../../../../core/widgets/tool_page_scaffold.dart';
@@ -145,9 +144,9 @@ class _PercentageCalculatorScreenState extends ConsumerState<PercentageCalculato
         else if (_result != null) ...[
           ResultDisplayCard(
             label: label,
-            value: '${_result!.toStringAsFixed(2)} \$unit',
+            value: '${_result!.toStringAsFixed(2)}$unit',
             formula: _modeIndex == 0 ? '(X / 100) × Y' : _modeIndex == 1 ? '(X / Y) × 100' : '((Y - X) / X) × 100',
-            substitution: 'Result = ${_result!.toStringAsFixed(2)} \$unit',
+            substitution: 'Result = ${_result!.toStringAsFixed(2)}$unit',
             onShare: () {},
           ),
         ],

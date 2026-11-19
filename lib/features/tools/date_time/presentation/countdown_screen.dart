@@ -69,11 +69,11 @@ class _CountdownScreenState extends ConsumerState<CountdownScreen> {
       results: [
         ResultDisplayCard(
           label: 'Time Remaining',
-          value: '\$days Days',
+          value: '$days Days',
           secondaryLabel: 'Hours & Minutes',
-          secondaryValue: '\$hours hrs, \$minutes mins',
+          secondaryValue: '$hours hrs, $minutes mins',
           formula: 'Remaining = TargetDate - Now',
-          substitution: '\$days days, \$hours hours remaining',
+          substitution: '$days days, $hours hours remaining',
           onShare: () {},
         ),
         const SizedBox(height: KSpacing.md),

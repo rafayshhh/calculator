@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/k_colors.dart';
-import '../../../../core/constants/k_radius.dart';
 import '../../../../core/constants/k_spacing.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/widgets/k_glass_card.dart';

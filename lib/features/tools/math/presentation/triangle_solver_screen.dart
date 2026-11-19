@@ -79,8 +79,10 @@ class _TriangleSolverScreenState extends ConsumerState<TriangleSolverScreen> {
       children: [
         ResultDisplayCard(
           title: 'Result',
-          value: 'Area = ${area.toStringAsFixed(3)}',
-          details: 'Angles: A=${aA.toStringAsFixed(1)}°, B=${aB.toStringAsFixed(1)}°, C=${aC.toStringAsFixed(1)}°\nPerimeter: ${p.toStringAsFixed(2)}\nInradius: ${(res['inradius'] as double? ?? 0.0).toStringAsFixed(2)}\nCircumradius: ${(res['circumradius'] as double? ?? 0.0).toStringAsFixed(2)}',
+          value: isValid ? 'Area = ${area.toStringAsFixed(3)}' : 'Invalid Triangle (a+b ≤ c)',
+          details: isValid
+              ? 'Angles: A=${aA.toStringAsFixed(1)}°, B=${aB.toStringAsFixed(1)}°, C=${aC.toStringAsFixed(1)}°\nPerimeter: ${p.toStringAsFixed(2)}\nInradius: ${(res['inradius'] as double? ?? 0.0).toStringAsFixed(2)}\nCircumradius: ${(res['circumradius'] as double? ?? 0.0).toStringAsFixed(2)}'
+              : 'The entered sides do not form a valid Euclidean triangle.\nThe sum of any two sides must strictly exceed the third side.',
         ),
         const SizedBox(height: KSpacing.lg),
           PremiumNumericField(

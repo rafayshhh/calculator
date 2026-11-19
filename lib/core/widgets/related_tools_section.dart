@@ -3,10 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import '../constants/k_colors.dart';
 import '../constants/k_spacing.dart';
-import '../constants/k_radius.dart';
 import 'k_glass_card.dart';
 import '../../features/tools/data/tools_registry.dart';
-import '../../features/tools/domain/tool_definition.dart';
 
 class RelatedToolsSection extends StatelessWidget {
   final String? toolId;

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +7,6 @@ import '../../../../core/widgets/k_stat_row.dart';
 import '../../../../core/widgets/premium_numeric_field.dart';
 import '../../../../core/widgets/result_display_card.dart';
 import '../../../../core/widgets/tool_page_scaffold.dart';
-import '../../../history/providers/history_provider.dart';
 
 class SalaryScreen extends ConsumerStatefulWidget {
   final String? initialStateJson;

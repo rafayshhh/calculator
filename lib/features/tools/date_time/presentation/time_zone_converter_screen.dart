@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/k_spacing.dart';
-import '../../../../core/widgets/k_stat_row.dart';
 import '../../../../core/widgets/result_display_card.dart';
 import '../../../../core/widgets/tool_page_scaffold.dart';
 
@@ -18,7 +15,6 @@ class TimeZoneConverterScreen extends ConsumerStatefulWidget {
 
 class _TimeZoneConverterScreenState extends ConsumerState<TimeZoneConverterScreen> {
   DateTime _utcTime = DateTime.now().toUtc();
-  int _sourceOffset = 0; // UTC
   int _targetOffset = 5; // PKT (UTC+5)
 
   final Map<String, int> _zones = {
@@ -65,7 +61,7 @@ class _TimeZoneConverterScreenState extends ConsumerState<TimeZoneConverterScree
           secondaryLabel: 'UTC Standard Time',
           secondaryValue: _format(_utcTime),
           formula: 'T_target = UTC + Offset',
-          substitution: 'Offset: UTC${_targetOffset >= 0 ? "+" : ""}\$_targetOffset:00',
+          substitution: 'Offset: UTC${_targetOffset >= 0 ? "+" : ""}$_targetOffset:00',
           onShare: () {},
         ),
       ],

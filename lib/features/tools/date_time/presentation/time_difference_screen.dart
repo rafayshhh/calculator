@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -85,15 +84,15 @@ class _TimeDifferenceScreenState extends ConsumerState<TimeDifferenceScreen> {
       results: [
         ResultDisplayCard(
           label: 'Elapsed Time',
-          value: '\$hours hrs, \$minutes mins',
+          value: '$hours hrs, $minutes mins',
           secondaryLabel: 'Decimal Hours',
           secondaryValue: '${(diffMin / 60.0).toStringAsFixed(2)} hrs',
           formula: 'Duration = Time₂ - Time₁',
-          substitution: '${_formatTod(_t1)} to ${_formatTod(_t2)} = \$hours h \$minutes m',
+          substitution: '${_formatTod(_t1)} to ${_formatTod(_t2)} = $hours h $minutes m',
           onShare: () {},
         ),
         const SizedBox(height: KSpacing.md),
-        KStatRow(label: 'Total Minutes', value: '\$diffMin minutes'),
+        KStatRow(label: 'Total Minutes', value: '$diffMin minutes'),
       ],
     );
   }

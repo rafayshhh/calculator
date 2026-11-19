@@ -76,7 +76,7 @@ class _DayOfWeekScreenState extends ConsumerState<DayOfWeekScreen> {
           onShare: () {},
         ),
         const SizedBox(height: KSpacing.md),
-        KStatRow(label: 'Day of the Year', value: 'Day \$dayOfYear of ${isLeap ? 366 : 365}'),
+        KStatRow(label: 'Day of the Year', value: 'Day $dayOfYear of ${isLeap ? 366 : 365}'),
         const SizedBox(height: KSpacing.xs),
         KStatRow(label: 'Leap Year', value: isLeap ? 'Yes (366 days)' : 'No (365 days)'),
       ],

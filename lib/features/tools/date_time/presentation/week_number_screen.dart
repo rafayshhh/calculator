@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/k_spacing.dart';
-import '../../../../core/widgets/k_stat_row.dart';
 import '../../../../core/widgets/result_display_card.dart';
 import '../../../../core/widgets/tool_page_scaffold.dart';
 import '../domain/date_time_engine.dart';
@@ -66,11 +64,11 @@ class _WeekNumberScreenState extends ConsumerState<WeekNumberScreen> {
       results: [
         ResultDisplayCard(
           label: 'ISO Week Number',
-          value: 'Week \$weekNum',
+          value: 'Week $weekNum',
           secondaryLabel: 'Calendar Year',
           secondaryValue: '${_date.year}',
           formula: 'ISO 8601 Week Standard',
-          substitution: 'Week \$weekNum of ${_date.year}',
+          substitution: 'Week $weekNum of ${_date.year}',
           onShare: () {},
         ),
       ],

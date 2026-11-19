@@ -86,6 +86,7 @@ class AdvancedStatisticsEngine {
       'sampleMean': sampleMean,
       'sampleSize': sampleSize,
       'confidenceLevel': confidenceLevelPercent,
+      'alpha': alpha,
       'zCritical': zCritical,
       'standardError': standardError,
       'marginOfError': marginOfError,

@@ -80,8 +80,10 @@ class _MatrixInverseScreenState extends ConsumerState<MatrixInverseScreen> {
       children: [
         ResultDisplayCard(
           title: 'Result',
-          value: 'det = ${det.toStringAsFixed(2)}',
-          details: 'Determinant: ${det.toStringAsFixed(3)}\nInverse A⁻¹:\n$matStr',
+          value: isInvertible ? 'det = ${det.toStringAsFixed(2)}' : 'Non-Invertible (det = 0)',
+          details: isInvertible
+              ? 'Determinant: ${det.toStringAsFixed(3)}\nInverse A⁻¹:\n$matStr'
+              : 'Determinant: 0.000\n$matStr',
         ),
         const SizedBox(height: KSpacing.lg),
           PremiumNumericField(

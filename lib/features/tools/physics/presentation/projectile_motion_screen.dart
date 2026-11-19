@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,12 +63,12 @@ class _ProjectileMotionScreenState extends ConsumerState<ProjectileMotionScreen>
     final v0 = double.tryParse(_v0) ?? 0.0;
     final theta = double.tryParse(_theta) ?? 45.0;
     final g = double.tryParse(_g) ?? 9.80665;
-    final rad = theta * (3.141592653589793 / 180.0);
-    final vx = v0 * 0.70710678; // approx cos
-    final vy = v0 * 0.70710678; // approx sin
-    final flightTime = (2 * v0 * 0.7071) / (g > 0 ? g : 9.8);
-    final maxHeight = (v0 * v0 * 0.5) / (2 * (g > 0 ? g : 9.8));
-    final range = (v0 * v0) / (g > 0 ? g : 9.8);
+    final rad = theta * (math.pi / 180.0);
+    final vx = v0 * math.cos(rad);
+    final vy = v0 * math.sin(rad);
+    final flightTime = (g > 0 && vy >= 0) ? (2 * vy) / g : 0.0;
+    final maxHeight = (g > 0 && vy >= 0) ? (vy * vy) / (2 * g) : 0.0;
+    final range = vx * flightTime;
 
     return ToolPageScaffold(
       title: 'Projectile Motion 2D Kinematics',
@@ -79,7 +80,7 @@ class _ProjectileMotionScreenState extends ConsumerState<ProjectileMotionScreen>
         ResultDisplayCard(
           title: 'Result',
           value: 'Range = ${range.toStringAsFixed(2)} m',
-          details: 'Max Altitude H: ${maxHeight.toStringAsFixed(3)} m\nTotal Flight Time: ${flightTime.toStringAsFixed(3)} s\nHorizontal Range R: ${range.toStringAsFixed(3)} m\nGravity: $g m/s²',
+          details: 'Initial vx: ${vx.toStringAsFixed(2)} m/s, vy: ${vy.toStringAsFixed(2)} m/s\nMax Altitude H: ${maxHeight.toStringAsFixed(3)} m\nTotal Flight Time: ${flightTime.toStringAsFixed(3)} s\nHorizontal Range R: ${range.toStringAsFixed(3)} m\nGravity: $g m/s²',
         ),
         const SizedBox(height: KSpacing.lg),
           PremiumNumericField(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +9,6 @@ import '../../../../core/widgets/tool_page_scaffold.dart';
 import '../../../../core/widgets/premium_numeric_field.dart';
 import '../../../../core/widgets/result_display_card.dart';
 import '../../../history/providers/history_provider.dart';
-import '../domain/advanced_statistics_engine.dart';
 
 class TDistributionScreen extends ConsumerStatefulWidget {
   final String? initialStateJson;
@@ -67,8 +67,9 @@ class _TDistributionScreenState extends ConsumerState<TDistributionScreen> {
     final s = double.tryParse(_s) ?? 1.0;
     final n = int.tryParse(_n) ?? 2;
     final df = n > 1 ? n - 1 : 1;
-    final se = s / (n > 0 ? (n > 1 ? (s > 0 ? 5.0 : 1.0) : 1.0) : 1.0);
-    final tScore = (sampleMean - popMean) / (s / (n > 0 ? 5.0 : 1.0)); // sample size sqrt(25) = 5
+    final sqrtN = n > 0 ? math.sqrt(n) : 1.0;
+    final se = s / sqrtN;
+    final tScore = se != 0 ? (sampleMean - popMean) / se : 0.0;
 
     return ToolPageScaffold(
       title: "Student's t-Distribution Statistics",
@@ -80,7 +81,7 @@ class _TDistributionScreenState extends ConsumerState<TDistributionScreen> {
         ResultDisplayCard(
           title: 'Result',
           value: 't = ${tScore.toStringAsFixed(3)}',
-          details: 'Degrees of Freedom (df): $df\nt-Score: ${tScore.toStringAsFixed(4)}\nSample Size: $n\nHypothesis: H₀: μ = $popMean vs H₁: μ ≠ $popMean',
+          details: 'Degrees of Freedom (df): $df\nt-Score: ${tScore.toStringAsFixed(4)}\nStandard Error (SE): ${se.toStringAsFixed(4)}\nSample Size: $n\nHypothesis: H₀: μ = $popMean vs H₁: μ ≠ $popMean',
         ),
         const SizedBox(height: KSpacing.lg),
           PremiumNumericField(

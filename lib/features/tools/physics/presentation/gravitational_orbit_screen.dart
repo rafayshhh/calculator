@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,20 +62,31 @@ class _GravitationalOrbitScreenState extends ConsumerState<GravitationalOrbitScr
     const G = 6.67430e-11;
     const rEarth = 6371000.0;
     final r = rEarth + altitudeKm * 1000.0;
-    final vOrb = (r > 0 && massCentral > 0) ? 7660.0 : 0.0; // approximate for LEO 400km
-    final periodMins = 92.5;
+    final double vOrb;
+    final double periodMins;
+    if (r > 0 && massCentral > 0) {
+      final mu = G * massCentral;
+      vOrb = math.sqrt(mu / r);
+      final periodSecs = 2 * math.pi * math.sqrt(math.pow(r, 3) / mu);
+      periodMins = periodSecs / 60.0;
+    } else {
+      vOrb = 0.0;
+      periodMins = 0.0;
+    }
+    final vKmS = vOrb / 1000.0;
+    final vKmH = vOrb * 3.6;
 
     return ToolPageScaffold(
       title: 'Orbital Mechanics & Gravitation',
       description: "Computes circular orbital velocity, period, and Newton's gravitational force",
       formula: 'v_orb = √(GM / r),  T = 2π√(r³ / GM),  F = G(m₁m₂) / r²',
       onReset: _reset,
-      onSave: () => _logHistory('Orbit alt=${altitudeKm}km', 'v≈7.66 km/s, T≈92.5 min'),
+      onSave: () => _logHistory('Orbit alt=${altitudeKm}km, M=$massCentral', 'v=${vKmS.toStringAsFixed(2)} km/s, T=${periodMins.toStringAsFixed(1)} min'),
       children: [
         ResultDisplayCard(
           title: 'Result',
-          value: 'Orbital Velocity ≈ 7.66 km/s',
-          details: 'Orbital Speed: 7,660 m/s (27,576 km/h)\nOrbital Period: 92.5 minutes\nRadius from Center: ${(r / 1000.0).toStringAsFixed(1)} km',
+          value: 'Orbital Velocity ≈ ${vKmS.toStringAsFixed(2)} km/s',
+          details: 'Orbital Speed: ${vOrb.toStringAsFixed(1)} m/s (${vKmH.toStringAsFixed(0)} km/h)\nOrbital Period: ${periodMins.toStringAsFixed(1)} minutes (${(periodMins / 60.0).toStringAsFixed(2)} hours)\nRadius from Center: ${(r / 1000.0).toStringAsFixed(1)} km',
         ),
         const SizedBox(height: KSpacing.lg),
           PremiumNumericField(
