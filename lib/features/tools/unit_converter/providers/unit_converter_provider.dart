@@ -52,12 +52,26 @@ class UnitConverterNotifier extends Notifier<UnitConverterState> {
     final source = units.isNotEmpty ? units[0] : UnitRegistry.allUnits[0];
     final target = units.length > 1 ? units[1] : source;
 
+    String initialResult = '1';
+    try {
+      final res = UnitConverterEngine.convert(
+        value: 1.0,
+        source: source,
+        target: target,
+      );
+      if (res % 1 == 0 && res.abs() < 1e12) {
+        initialResult = res.toInt().toString();
+      } else {
+        initialResult = res.toStringAsFixed(8).replaceAll(RegExp(r'\.?0+$'), '');
+      }
+    } catch (_) {}
+
     return UnitConverterState(
       category: defaultCat,
       sourceUnit: source,
       targetUnit: target,
       inputValue: '1',
-      resultValue: '1',
+      resultValue: initialResult,
     );
   }
 

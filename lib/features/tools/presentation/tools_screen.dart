@@ -23,6 +23,9 @@ class ToolsScreen extends ConsumerWidget {
 
     final recents = ref.watch(recentToolsProvider);
     final recommendations = ToolRecommendations.getRecommendations(recents, 4);
+    final activeCategories = ToolCategory.values
+        .where((c) => ToolsRegistry.getToolsByCategory(c).isNotEmpty)
+        .toList();
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121418) : const Color(0xFFF7F9FC),
@@ -113,9 +116,9 @@ class ToolsScreen extends ConsumerWidget {
                 crossAxisSpacing: KSpacing.sm,
                 mainAxisSpacing: KSpacing.sm,
               ),
-              itemCount: ToolCategory.values.length,
+              itemCount: activeCategories.length,
               itemBuilder: (context, index) {
-                final category = ToolCategory.values[index];
+                final category = activeCategories[index];
                 final count = ToolsRegistry.getToolsByCategory(category).length;
 
                 return KGlassCard(

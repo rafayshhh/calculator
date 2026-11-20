@@ -111,7 +111,7 @@ class _GraphPainter extends CustomPainter {
           final substituted = expression
               .replaceAll('x', '($x)')
               .replaceAll('X', '($x)');
-          final yStr = MathEngine.evaluate(substituted);
+          final yStr = MathEngine.evaluate(substituted, angleMode: AngleMode.radians);
           final y = double.tryParse(yStr);
 
           if (y != null && !y.isNaN && !y.isInfinite && y >= yMin * 2 && y <= yMax * 2) {

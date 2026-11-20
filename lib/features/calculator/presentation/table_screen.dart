@@ -15,6 +15,7 @@ class TableScreen extends StatefulWidget {
 
 class _TableScreenState extends State<TableScreen> {
   String _func = 'x^2';
+  late final TextEditingController _controller;
   double _start = -5;
   double _end = 5;
   double _step = 1;
@@ -24,7 +25,14 @@ class _TableScreenState extends State<TableScreen> {
   @override
   void initState() {
     super.initState();
+    _controller = TextEditingController(text: _func);
     _generate();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void _generate() {
@@ -32,7 +40,7 @@ class _TableScreenState extends State<TableScreen> {
     for (double x = _start; x <= _end; x += _step) {
       try {
         final sub = _func.replaceAll('x', '($x)').replaceAll('X', '($x)');
-        final y = MathEngine.evaluate(sub);
+        final y = MathEngine.evaluate(sub, angleMode: AngleMode.radians);
         _rows.add((x, y));
       } catch (_) {
         _rows.add((x, 'Error'));
@@ -68,6 +76,7 @@ class _TableScreenState extends State<TableScreen> {
                   Text('f(x) = ', style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold)),
                   Expanded(
                     child: TextField(
+                      controller: _controller,
                       style: TextStyle(color: textPrimary),
                       decoration: InputDecoration(
                         hintText: 'e.g. x^2, 2*x + 1',

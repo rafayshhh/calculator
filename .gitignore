@@ -19,4 +19,5 @@ node_modules/
 
 # Local configuration
 *.local
+*.hive
 android/key.properties
