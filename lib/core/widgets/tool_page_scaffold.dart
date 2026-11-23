@@ -112,10 +112,8 @@ class ToolPageScaffold extends ConsumerWidget {
     final effectiveInputs = inputs ?? const [];
     final effectiveResults = results ?? const [];
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textMutedColor =
-        isDark ? KColors.textMutedDark : KColors.textMutedLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textMutedColor = KColors.textMutedAdaptive(context);
 
     final isFavorite = effectiveToolId.isNotEmpty &&
         ref.watch(favoritesProvider).contains(effectiveToolId);
@@ -328,38 +326,45 @@ class ToolPageScaffold extends ConsumerWidget {
                         actionButton!,
                       ],
                       const SizedBox(height: KSpacing.lg),
-                      Row(
-                        children: [
-                          Icon(Icons.analytics_outlined,
-                              size: 15, color: primaryColor),
-                          const SizedBox(width: 6),
-                          Text(
-                            'RESULTS & ANALYSIS',
-                            style: TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                              letterSpacing: 1.1,
+                      if (effectiveResults.isNotEmpty ||
+                          effectiveFormulaCard != null ||
+                          breakdownCard != null) ...[
+                        Row(
+                          children: [
+                            Icon(Icons.analytics_outlined,
+                                size: 15, color: primaryColor),
+                            const SizedBox(width: 6),
+                            Text(
+                              'RESULTS & ANALYSIS',
+                              style: TextStyle(
+                                color: primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                letterSpacing: 1.1,
+                              ),
                             ),
-                          ),
+                          ],
+                        ),
+                        const SizedBox(height: KSpacing.sm),
+                        ...effectiveResults,
+                        if (effectiveFormulaCard != null) ...[
+                          const SizedBox(height: KSpacing.md),
+                          effectiveFormulaCard,
                         ],
-                      ),
-                      const SizedBox(height: KSpacing.sm),
-                      ...effectiveResults,
-                      if (effectiveFormulaCard != null) ...[
-                        const SizedBox(height: KSpacing.md),
-                        effectiveFormulaCard,
-                      ],
-                      if (breakdownCard != null) ...[
-                        const SizedBox(height: KSpacing.md),
-                        breakdownCard!,
+                        if (breakdownCard != null) ...[
+                          const SizedBox(height: KSpacing.md),
+                          breakdownCard!,
+                        ],
+                        const SizedBox(height: KSpacing.lg),
                       ],
                     ],
 
                     ...?bottomWidgets,
 
-                    if (showRelatedTools && effectiveToolId.isNotEmpty)
+                    if (showRelatedTools && effectiveToolId.isNotEmpty) ...[
+                      const SizedBox(height: KSpacing.md),
                       RelatedToolsSection(toolId: effectiveToolId),
+                    ],
 
                     const SizedBox(height: KSpacing.xxl),
                   ],

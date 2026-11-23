@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/constants/k_color_theme.dart';
@@ -51,6 +52,7 @@ class KTheme {
         secondary: palette.secondary,
         onSecondary: Colors.white,
         secondaryContainer: palette.secondaryContainer,
+        onSecondaryContainer: isDark ? Colors.white : palette.primary,
         error: palette.error,
         onError: Colors.white,
         surface: palette.surface,
@@ -102,6 +104,24 @@ class KTheme {
           side: WidgetStateProperty.all(
             BorderSide(color: palette.glassBorder, width: 1),
           ),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return palette.primary.withValues(alpha: isDark ? 0.25 : 0.15);
+            }
+            return Colors.transparent;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return palette.primary;
+            }
+            return palette.textSecondary;
+          }),
+          iconColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return palette.primary;
+            }
+            return palette.textSecondary;
+          }),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -175,6 +195,14 @@ class KTheme {
           color: palette.textPrimary,
           fontSize: 18,
           fontWeight: FontWeight.bold,
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+          systemNavigationBarColor: palette.backgroundElevated,
+          systemNavigationBarIconBrightness:
+              isDark ? Brightness.light : Brightness.dark,
         ),
       ),
       useMaterial3: true,

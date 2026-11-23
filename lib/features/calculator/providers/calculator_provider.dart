@@ -301,6 +301,8 @@ class CalculatorNotifier extends Notifier<CalculatorState> {
     state = state.copyWith(isScientific: !state.isScientific);
   }
 
+  void toggleMode() => toggleScientific();
+
   void toggleScientificExpanded() {
     state = state.copyWith(isScientificExpanded: !state.isScientificExpanded);
   }

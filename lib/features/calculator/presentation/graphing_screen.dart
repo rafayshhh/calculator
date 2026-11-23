@@ -37,11 +37,11 @@ class _GraphingScreenState extends State<GraphingScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textPrimary = isDark ? KColors.textPrimaryDark : KColors.textPrimaryLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textPrimary = KColors.textPrimaryAdaptive(context);
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121418) : const Color(0xFFF7F9FC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('2D Function Grapher'),
         backgroundColor: Colors.transparent,

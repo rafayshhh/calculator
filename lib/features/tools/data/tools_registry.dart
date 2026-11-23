@@ -1549,7 +1549,18 @@ class ToolsRegistry {
     try {
       return allTools.firstWhere((t) => t.id == id);
     } catch (_) {
-      return null;
+      try {
+        final clean = id.toLowerCase().trim();
+        return allTools.firstWhere(
+          (t) =>
+              t.id.toLowerCase() == clean ||
+              t.id.toLowerCase().startsWith('${clean}_') ||
+              t.id.toLowerCase().endsWith('_$clean') ||
+              t.id.toLowerCase().contains(clean),
+        );
+      } catch (_) {
+        return null;
+      }
     }
   }
 
@@ -1572,10 +1583,17 @@ class ToolsRegistry {
 
   static List<ToolDefinition> getRelatedTools(String toolId, {int limit = 4}) {
     final current = getById(toolId);
-    if (current == null) return allTools.take(limit).toList();
+    if (current == null) {
+      return allTools
+          .where((t) =>
+              t.category == ToolCategory.everyday ||
+              t.category == ToolCategory.finance)
+          .take(limit)
+          .toList();
+    }
     return allTools
         .where((t) =>
-            t.id != toolId &&
+            t.id != current.id &&
             (t.category == current.category ||
                 t.subcategory == current.subcategory))
         .take(limit)

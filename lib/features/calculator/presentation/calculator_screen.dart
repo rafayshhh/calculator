@@ -101,11 +101,10 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, dynamic state, dynamic notifier, dynamic feedback) {
+  Widget _buildMobileLayout(BuildContext context, CalculatorState state, CalculatorNotifier notifier, FeedbackIntensity feedback) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textSecondaryColor =
-        isDark ? KColors.textSecondaryDark : KColors.textSecondaryLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textSecondaryColor = KColors.textSecondaryAdaptive(context);
     final keypadContainerBg =
         isDark ? KColors.backgroundElevatedDark : KColors.surfaceElevatedLight;
 
@@ -238,7 +237,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                           : 'Switch to Scientific',
                       onPressed: () {
                         FeedbackService.settingChange(feedback);
-                        notifier.toggleMode();
+                        notifier.toggleScientific();
                       },
                     ),
                   ],
@@ -283,11 +282,10 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
     );
   }
 
-  Widget _buildDesktopLayout(BuildContext context, dynamic state, dynamic notifier, dynamic feedback) {
+  Widget _buildDesktopLayout(BuildContext context, CalculatorState state, CalculatorNotifier notifier, FeedbackIntensity feedback) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textSecondaryColor =
-        isDark ? KColors.textSecondaryDark : KColors.textSecondaryLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textSecondaryColor = KColors.textSecondaryAdaptive(context);
     final keypadContainerBg =
         isDark ? KColors.backgroundElevatedDark : KColors.surfaceElevatedLight;
 

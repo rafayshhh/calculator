@@ -39,28 +39,35 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Calculation Engine sections
-      expect(find.text('CALCULATION ENGINE'), findsOneWidget);
-      expect(find.text('Decimal Precision'), findsOneWidget);
-      expect(find.text('Angle Mode'), findsOneWidget);
-      expect(find.text('Thousands Separator'), findsOneWidget);
+      // App Branding & Version
+      expect(find.text('Calculator'), findsWidgets);
+      expect(find.text('Calculator Version 1.0'), findsOneWidget);
 
-      // Appearance & Feedback
+      // Appearance & Theme
       expect(find.text('APPEARANCE & THEME'), findsOneWidget);
-      expect(find.text('INTERACTION & FEEDBACK'), findsOneWidget);
-      expect(find.text('STORAGE & HISTORY'), findsOneWidget);
+      expect(find.text('Display Mode'), findsOneWidget);
+      expect(find.text('Color Themes'), findsOneWidget);
+      expect(find.text('Electric Cyan'), findsOneWidget);
+      expect(find.text('Emerald Mint'), findsOneWidget);
+      expect(find.text('Royal Violet'), findsOneWidget);
 
-      // Creator & Community
-      expect(find.text('CREATOR & COMMUNITY'), findsOneWidget);
-      expect(find.text('Muhammad Abdul Rafay'), findsOneWidget);
-      expect(find.textContaining('Instagram: @kreatekode'), findsOneWidget);
-      expect(find.textContaining('GitHub: @rafayshhh'), findsOneWidget);
-      expect(find.textContaining('Google Play Store: KreateKode'), findsOneWidget);
-      expect(find.textContaining('Website: kreatekode.website'), findsOneWidget);
+      // Publisher & Developer
+      expect(find.text('PUBLISHER & DEVELOPER'), findsOneWidget);
+      expect(find.text('Publisher'), findsOneWidget);
+      expect(find.text('KreateKode'), findsOneWidget);
+      expect(find.text('Developer'), findsOneWidget);
+      expect(find.text('RafayShhh (Muhammad Abdul Rafay)'), findsOneWidget);
 
-      // Application info
-      expect(find.text('About Calculator'), findsOneWidget);
-      expect(find.text('Source Code Repository'), findsOneWidget);
+      // Social Links & Repository
+      expect(find.text('SOCIAL LINKS & REPOSITORY'), findsOneWidget);
+      expect(find.text('GitHub Repository'), findsOneWidget);
+      expect(find.text('github.com/rafayshhh/calculator'), findsOneWidget);
+      expect(find.text('Instagram'), findsOneWidget);
+      expect(find.text('@kreatekode'), findsOneWidget);
+      expect(find.text('GitHub Profile'), findsOneWidget);
+      expect(find.text('@rafayshhh'), findsOneWidget);
+      expect(find.text('Official Website'), findsOneWidget);
+      expect(find.text('kreatekode.website'), findsOneWidget);
 
       // Verify ZERO licenses or legal boilerplate
       expect(find.text('Software License'), findsNothing);

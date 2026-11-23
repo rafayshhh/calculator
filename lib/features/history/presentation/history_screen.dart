@@ -17,13 +17,12 @@ class HistoryScreen extends ConsumerWidget {
     final history = ref.watch(historyProvider);
     final notifier = ref.read(historyProvider.notifier);
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textPrimary = isDark ? KColors.textPrimaryDark : KColors.textPrimaryLight;
-    final textSecondary = isDark ? KColors.textSecondaryDark : KColors.textSecondaryLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textPrimary = KColors.textPrimaryAdaptive(context);
+    final textSecondary = KColors.textSecondaryAdaptive(context);
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121418) : const Color(0xFFF7F9FC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Calculation History'),
         backgroundColor: Colors.transparent,

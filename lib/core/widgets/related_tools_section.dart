@@ -21,10 +21,9 @@ class RelatedToolsSection extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textPrimary = isDark ? KColors.textPrimaryDark : KColors.textPrimaryLight;
-    final textSecondary = isDark ? KColors.textSecondaryDark : KColors.textSecondaryLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textPrimary = KColors.textPrimaryAdaptive(context);
+    final textSecondary = KColors.textSecondaryAdaptive(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

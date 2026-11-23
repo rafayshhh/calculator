@@ -21,3 +21,7 @@ node_modules/
 *.local
 *.hive
 android/key.properties
+.gradle/
+android/.gradle/
+android/local.properties
+

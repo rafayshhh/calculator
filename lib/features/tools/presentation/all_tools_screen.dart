@@ -39,9 +39,9 @@ class _AllToolsScreenState extends ConsumerState<AllToolsScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textPrimary = isDark ? KColors.textPrimaryDark : KColors.textPrimaryLight;
-    final textSecondary = isDark ? KColors.textSecondaryDark : KColors.textSecondaryLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textPrimary = KColors.textPrimaryAdaptive(context);
+    final textSecondary = KColors.textSecondaryAdaptive(context);
 
     final recents = ref.watch(recentToolsProvider);
     final favorites = ref.watch(favoritesProvider);
@@ -55,7 +55,7 @@ class _AllToolsScreenState extends ConsumerState<AllToolsScreen>
     }).toList();
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121418) : const Color(0xFFF7F9FC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('All Tools Directory'),
         backgroundColor: Colors.transparent,

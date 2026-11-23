@@ -25,19 +25,29 @@ class AppNavigationShell extends StatelessWidget {
     final bgElevated = palette.backgroundElevated;
     final indicatorColor = palette.glassSurface;
     final borderColor = palette.glassBorder;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.keyK, control: true): () {
-          QuickLauncherDialog.show(context);
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: bgElevated,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+      ),
+      child: CallbackShortcuts(
+        bindings: {
+          const SingleActivator(LogicalKeyboardKey.keyK, control: true): () {
+            QuickLauncherDialog.show(context);
+          },
+          const SingleActivator(LogicalKeyboardKey.keyK, meta: true): () {
+            QuickLauncherDialog.show(context);
+          },
         },
-        const SingleActivator(LogicalKeyboardKey.keyK, meta: true): () {
-          QuickLauncherDialog.show(context);
-        },
-      },
-      child: Focus(
-        autofocus: true,
-        child: LayoutBuilder(
+        child: Focus(
+          autofocus: true,
+          child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth >= 900) {
               // Desktop/Web: Professional split-pane sidebar UI
@@ -129,6 +139,7 @@ class AppNavigationShell extends StatelessWidget {
           },
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

@@ -39,7 +39,7 @@ class _TipCalculatorScreenState extends ConsumerState<TipCalculatorScreen> {
     final notifier = ref.read(tipProvider.notifier);
 
     return ToolPageScaffold(
-      toolId: 'tip',
+      toolId: 'tip_calculator',
       title: 'Tip Calculator',
       description:
           'Calculate gratuity and split dining checks evenly per person',

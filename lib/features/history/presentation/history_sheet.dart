@@ -55,13 +55,9 @@ class HistorySheet extends ConsumerWidget {
     final history = ref.watch(historyProvider);
     final feedback = ref.watch(feedbackProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textPrimaryColor = isDark
-        ? KColors.textPrimaryDark
-        : KColors.textPrimaryLight;
-    final textMutedColor = isDark
-        ? KColors.textMutedDark
-        : KColors.textMutedLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textPrimaryColor = KColors.textPrimaryAdaptive(context);
+    final textMutedColor = KColors.textMutedAdaptive(context);
     final sheetBg = isDark
         ? KColors.backgroundElevatedDark
         : KColors.surfaceLight;

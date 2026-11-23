@@ -17,9 +17,9 @@ class ToolsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? KColors.primary : const Color(0xFF0091EA);
-    final textPrimary = isDark ? KColors.textPrimaryDark : KColors.textPrimaryLight;
-    final textSecondary = isDark ? KColors.textSecondaryDark : KColors.textSecondaryLight;
+    final primaryColor = KColors.primaryAdaptive(context);
+    final textPrimary = KColors.textPrimaryAdaptive(context);
+    final textSecondary = KColors.textSecondaryAdaptive(context);
 
     final recents = ref.watch(recentToolsProvider);
     final recommendations = ToolRecommendations.getRecommendations(recents, 4);
@@ -28,7 +28,7 @@ class ToolsScreen extends ConsumerWidget {
         .toList();
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121418) : const Color(0xFFF7F9FC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Toolbox Hub'),
         backgroundColor: Colors.transparent,
@@ -37,7 +37,7 @@ class ToolsScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.list_alt_rounded),
             tooltip: 'All Tools Directory',
-            onPressed: () => context.push('/tools/all'),
+            onPressed: () => context.push('/tools/directory'),
           ),
         ],
       ),
@@ -80,10 +80,10 @@ class ToolsScreen extends ConsumerWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () => context.push('/tools/all'),
+                    onPressed: () => context.push('/tools/directory'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
-                      foregroundColor: Colors.white,
+                      foregroundColor: isDark ? Colors.black : Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     ),
                     child: const Text('Browse All'),

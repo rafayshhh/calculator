@@ -14,13 +14,12 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textSecondary = isDark ? KColors.textSecondaryDark : KColors.textSecondaryLight;
+    final textSecondary = KColors.textSecondaryAdaptive(context);
 
     final tools = ToolsRegistry.getToolsByCategory(category);
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121418) : const Color(0xFFF7F9FC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(category.displayName),
         backgroundColor: Colors.transparent,

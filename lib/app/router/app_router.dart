@@ -241,6 +241,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     builder: (context, state) => const AllToolsScreen(),
                   ),
                   GoRoute(
+                    path: 'all',
+                    builder: (context, state) => const AllToolsScreen(),
+                  ),
+                  GoRoute(
                     path: 'category/:slug',
                     builder: (context, state) {
                       final slug = state.pathParameters['slug'] ?? '';
@@ -2063,17 +2067,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // Branch 2: History
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/history',
-                builder: (context, state) => const HistoryScreen(),
-              ),
-            ],
-          ),
-
-          // Branch 3: Settings
+          // Branch 2: Settings
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -2105,6 +2099,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     builder: (context, state) => const SupportScreen(),
                   ),
                 ],
+              ),
+            ],
+          ),
+
+          // Branch 3: History
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/history',
+                builder: (context, state) => const HistoryScreen(),
               ),
             ],
           ),

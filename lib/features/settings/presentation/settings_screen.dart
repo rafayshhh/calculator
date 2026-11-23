@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/k_colors.dart';
 import '../../../core/constants/k_color_theme.dart';
@@ -9,195 +8,10 @@ import '../../../core/constants/kreate_links.dart';
 import '../../../core/services/feedback_service.dart';
 import '../../../core/widgets/k_glass_card.dart';
 import '../../../core/widgets/k_page_container.dart';
-import '../../calculator/domain/math_engine.dart';
-import '../providers/app_settings_provider.dart';
 import '../providers/theme_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
-
-  void _showPrecisionDialog(
-      BuildContext context, WidgetRef ref, int currentPrecision) {
-    final options = [
-      {'label': 'Auto (Floating)', 'value': -1},
-      {'label': '2 Decimal Places', 'value': 2},
-      {'label': '4 Decimal Places', 'value': 4},
-      {'label': '6 Decimal Places', 'value': 6},
-      {'label': '8 Decimal Places', 'value': 8},
-      {'label': '10 Decimal Places', 'value': 10},
-      {'label': '12 Decimal Places', 'value': 12},
-    ];
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) {
-        final isDark = Theme.of(ctx).brightness == Brightness.dark;
-        final primaryColor = KColors.primaryAdaptive(ctx);
-        final textPrimaryColor = KColors.textPrimaryAdaptive(ctx);
-
-        return Container(
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E293B) : Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  'Decimal Precision',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: textPrimaryColor,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              ...options.map((opt) {
-                final val = opt['value'] as int;
-                final isSelected = val == currentPrecision;
-                return ListTile(
-                  title: Text(
-                    opt['label'] as String,
-                    style: TextStyle(
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? primaryColor : textPrimaryColor,
-                    ),
-                  ),
-                  trailing: isSelected
-                      ? Icon(Icons.check_circle_rounded, color: primaryColor)
-                      : null,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onTap: () {
-                    ref
-                        .read(appSettingsProvider.notifier)
-                        .setDecimalPrecision(val);
-                    Navigator.pop(ctx);
-                  },
-                );
-              }),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showAngleModeDialog(
-      BuildContext context, WidgetRef ref, AngleMode currentMode) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) {
-        final isDark = Theme.of(ctx).brightness == Brightness.dark;
-        final primaryColor = KColors.primaryAdaptive(ctx);
-        final textPrimaryColor = KColors.textPrimaryAdaptive(ctx);
-
-        return Container(
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E293B) : Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  'Default Angle Mode',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: textPrimaryColor,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              ListTile(
-                title: Text(
-                  'Degrees (DEG)',
-                  style: TextStyle(
-                    fontWeight: currentMode == AngleMode.degrees
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    color: currentMode == AngleMode.degrees
-                        ? primaryColor
-                        : textPrimaryColor,
-                  ),
-                ),
-                subtitle: const Text('Standard 360° circle (default)'),
-                trailing: currentMode == AngleMode.degrees
-                    ? Icon(Icons.check_circle_rounded, color: primaryColor)
-                    : null,
-                onTap: () {
-                  ref
-                      .read(appSettingsProvider.notifier)
-                      .setDefaultAngleMode(AngleMode.degrees);
-                  Navigator.pop(ctx);
-                },
-              ),
-              ListTile(
-                title: Text(
-                  'Radians (RAD)',
-                  style: TextStyle(
-                    fontWeight: currentMode == AngleMode.radians
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    color: currentMode == AngleMode.radians
-                        ? primaryColor
-                        : textPrimaryColor,
-                  ),
-                ),
-                subtitle: const Text('Calculus & physics mathematical unit'),
-                trailing: currentMode == AngleMode.radians
-                    ? Icon(Icons.check_circle_rounded, color: primaryColor)
-                    : null,
-                onTap: () {
-                  ref
-                      .read(appSettingsProvider.notifier)
-                      .setDefaultAngleMode(AngleMode.radians);
-                  Navigator.pop(ctx);
-                },
-              ),
-              ListTile(
-                title: Text(
-                  'Gradians (GRAD)',
-                  style: TextStyle(
-                    fontWeight: currentMode == AngleMode.gradians
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    color: currentMode == AngleMode.gradians
-                        ? primaryColor
-                        : textPrimaryColor,
-                  ),
-                ),
-                subtitle: const Text('Geodesy & surveying 400-grade circle'),
-                trailing: currentMode == AngleMode.gradians
-                    ? Icon(Icons.check_circle_rounded, color: primaryColor)
-                    : null,
-                onTap: () {
-                  ref
-                      .read(appSettingsProvider.notifier)
-                      .setDefaultAngleMode(AngleMode.gradians);
-                  Navigator.pop(ctx);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -206,15 +20,18 @@ class SettingsScreen extends ConsumerWidget {
     final textSecondaryColor = KColors.textSecondaryAdaptive(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final feedback = ref.watch(feedbackProvider);
-    final appSettings = ref.watch(appSettingsProvider);
     final themeMode = ref.watch(themeProvider);
     final colorTheme = ref.watch(colorThemeProvider);
 
     return KPageContainer(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text(
+          'Settings',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: false,
       ),
       child: ListView(
         padding: const EdgeInsets.symmetric(
@@ -222,102 +39,83 @@ class SettingsScreen extends ConsumerWidget {
           vertical: KSpacing.sm,
         ),
         children: [
-          // 1. CALCULATION ENGINE
-          _buildSectionHeader('CALCULATION ENGINE', primaryColor),
+          // 1. APP BRANDING BANNER
           KGlassCard(
+            padding: const EdgeInsets.all(KSpacing.lg),
             child: Column(
               children: [
-                ListTile(
-                  leading:
-                      Icon(Icons.format_list_numbered_rounded, color: primaryColor),
-                  title: Text(
-                    'Decimal Precision',
-                    style: TextStyle(
-                      color: textPrimaryColor,
-                      fontWeight: FontWeight.w600,
+                Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: primaryColor.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: primaryColor.withValues(alpha: 0.4),
+                      width: 2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryColor.withValues(alpha: 0.25),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.calculate_rounded,
+                      size: 40,
+                      color: primaryColor,
                     ),
                   ),
-                  subtitle: Text(
-                    appSettings.precisionLabel,
-                    style: TextStyle(color: textSecondaryColor, fontSize: 12),
+                ),
+                const SizedBox(height: KSpacing.md),
+                Text(
+                  'Calculator',
+                  style: TextStyle(
+                    color: textPrimaryColor,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.8,
                   ),
-                  trailing: const Icon(Icons.chevron_right_rounded, size: 18),
-                  onTap: () {
-                    FeedbackService.toolSelect(feedback);
-                    _showPrecisionDialog(
-                        context, ref, appSettings.decimalPrecision);
-                  },
                 ),
-                Divider(
-                  color: isDark
-                      ? KColors.glassBorderDark
-                      : KColors.glassBorderLight,
-                  height: 1,
-                ),
-                ListTile(
-                  leading: Icon(Icons.rotate_90_degrees_cw_rounded,
-                      color: primaryColor),
-                  title: Text(
-                    'Angle Mode',
-                    style: TextStyle(
-                      color: textPrimaryColor,
-                      fontWeight: FontWeight.w600,
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: primaryColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: primaryColor.withValues(alpha: 0.3),
+                      width: 1,
                     ),
                   ),
-                  subtitle: Text(
-                    appSettings.angleModeLabel,
-                    style: TextStyle(color: textSecondaryColor, fontSize: 12),
-                  ),
-                  trailing: const Icon(Icons.chevron_right_rounded, size: 18),
-                  onTap: () {
-                    FeedbackService.toolSelect(feedback);
-                    _showAngleModeDialog(
-                        context, ref, appSettings.defaultAngleMode);
-                  },
-                ),
-                Divider(
-                  color: isDark
-                      ? KColors.glassBorderDark
-                      : KColors.glassBorderLight,
-                  height: 1,
-                ),
-                SwitchListTile(
-                  secondary: Icon(Icons.space_bar_rounded, color: primaryColor),
-                  title: Text(
-                    'Thousands Separator',
+                  child: Text(
+                    'Calculator Version 1.0',
                     style: TextStyle(
-                      color: textPrimaryColor,
+                      color: primaryColor,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                  subtitle: Text(
-                    appSettings.useThousandsSeparator
-                        ? '1,234,567.89'
-                        : '1234567.89',
-                    style: TextStyle(color: textSecondaryColor, fontSize: 12),
-                  ),
-                  value: appSettings.useThousandsSeparator,
-                  activeThumbColor: primaryColor,
-                  onChanged: (val) {
-                    FeedbackService.settingChange(feedback);
-                    ref
-                        .read(appSettingsProvider.notifier)
-                        .setThousandsSeparator(val);
-                  },
                 ),
               ],
             ),
           ),
           const SizedBox(height: KSpacing.lg),
 
-          // 2. APPEARANCE & THEME
+          // 2. APPEARANCE & THEMES
           _buildSectionHeader('APPEARANCE & THEME', primaryColor),
           KGlassCard(
             padding: const EdgeInsets.all(KSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Theme Mode Selector Header
                 Row(
                   children: [
                     Icon(Icons.brightness_6_rounded, color: primaryColor, size: 20),
@@ -338,7 +136,6 @@ class SettingsScreen extends ConsumerWidget {
                   style: TextStyle(color: textSecondaryColor, fontSize: 12),
                 ),
                 const SizedBox(height: KSpacing.md),
-                // Light / Dark / System Segmented Control
                 SizedBox(
                   width: double.infinity,
                   child: SegmentedButton<ThemeMode>(
@@ -376,7 +173,6 @@ class SettingsScreen extends ConsumerWidget {
                   height: 1,
                 ),
                 const SizedBox(height: KSpacing.md),
-                // Color Themes Header
                 Row(
                   children: [
                     Icon(Icons.palette_rounded, color: primaryColor, size: 20),
@@ -397,7 +193,6 @@ class SettingsScreen extends ConsumerWidget {
                   style: TextStyle(color: textSecondaryColor, fontSize: 12),
                 ),
                 const SizedBox(height: KSpacing.md),
-                // 3 Color Themes Selector Row
                 Row(
                   children: [
                     (
@@ -510,19 +305,125 @@ class SettingsScreen extends ConsumerWidget {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: KSpacing.md),
+              ],
+            ),
+          ),
+          const SizedBox(height: KSpacing.lg),
+
+          // 3. PUBLISHER & DEVELOPER
+          _buildSectionHeader('PUBLISHER & DEVELOPER', primaryColor),
+          KGlassCard(
+            padding: const EdgeInsets.all(KSpacing.sm),
+            child: Column(
+              children: [
+                // Publisher: KreateKode
+                ListTile(
+                  leading: Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00E5FF).withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFF00E5FF).withValues(alpha: 0.4),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.business_rounded,
+                      color: Color(0xFF00E5FF),
+                      size: 22,
+                    ),
+                  ),
+                  title: Text(
+                    'Publisher',
+                    style: TextStyle(
+                      color: textSecondaryColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'KreateKode',
+                    style: TextStyle(
+                      color: textPrimaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.verified_rounded,
+                      color: Color(0xFF00E5FF), size: 20),
+                ),
                 Divider(
                   color: isDark
                       ? KColors.glassBorderDark
                       : KColors.glassBorderLight,
                   height: 1,
+                  indent: 16,
+                  endIndent: 16,
                 ),
-                const SizedBox(height: 4),
+                // Developer: RafayShhh
                 ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.palette_outlined, color: primaryColor),
+                  leading: Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00E676).withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFF00E676).withValues(alpha: 0.4),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.person_rounded,
+                      color: Color(0xFF00E676),
+                      size: 24,
+                    ),
+                  ),
                   title: Text(
-                    'Theme & Accent Palette',
+                    'Developer',
+                    style: TextStyle(
+                      color: textSecondaryColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'RafayShhh (Muhammad Abdul Rafay)',
+                    style: TextStyle(
+                      color: textPrimaryColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.code_rounded,
+                      color: Color(0xFF00E676), size: 20),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: KSpacing.lg),
+
+          // 4. SOCIAL LINKS & GITHUB REPO
+          _buildSectionHeader('SOCIAL LINKS & REPOSITORY', primaryColor),
+          KGlassCard(
+            padding: const EdgeInsets.all(KSpacing.sm),
+            child: Column(
+              children: [
+                // GitHub Repository
+                ListTile(
+                  leading: Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: primaryColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.code_rounded, color: primaryColor, size: 22),
+                  ),
+                  title: Text(
+                    'GitHub Repository',
                     style: TextStyle(
                       color: textPrimaryColor,
                       fontWeight: FontWeight.w600,
@@ -530,265 +431,10 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ),
                   subtitle: Text(
-                    'Explore all 6 color themes & AMOLED mode',
-                    style: TextStyle(color: textSecondaryColor, fontSize: 12),
-                  ),
-                  trailing: const Icon(Icons.chevron_right_rounded, size: 18),
-                  onTap: () {
-                    FeedbackService.toolSelect(feedback);
-                    context.push('/settings/theme');
-                  },
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: KSpacing.lg),
-
-          // 3. INTERACTION & FEEDBACK
-          _buildSectionHeader('INTERACTION & FEEDBACK', primaryColor),
-          KGlassCard(
-            child: ListTile(
-              leading: Icon(Icons.vibration_rounded, color: primaryColor),
-              title: Text(
-                'Haptic & Audio Feedback',
-                style: TextStyle(
-                  color: textPrimaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              subtitle: Text(
-                'Keypad touch feedback intensity & audio clicks',
-                style: TextStyle(color: textSecondaryColor, fontSize: 12),
-              ),
-              trailing: const Icon(Icons.chevron_right_rounded, size: 18),
-              onTap: () {
-                FeedbackService.toolSelect(feedback);
-                context.push('/settings/haptics');
-              },
-            ),
-          ),
-          const SizedBox(height: KSpacing.lg),
-
-          // 4. STORAGE & HISTORY
-          _buildSectionHeader('STORAGE & HISTORY', primaryColor),
-          KGlassCard(
-            child: ListTile(
-              leading: Icon(Icons.storage_outlined, color: primaryColor),
-              title: Text(
-                'History & Favorites Data',
-                style: TextStyle(
-                  color: textPrimaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              subtitle: Text(
-                'Calculation logs capacity, favorites & cache',
-                style: TextStyle(color: textSecondaryColor, fontSize: 12),
-              ),
-              trailing: const Icon(Icons.chevron_right_rounded, size: 18),
-              onTap: () {
-                FeedbackService.toolSelect(feedback);
-                context.push('/settings/data');
-              },
-            ),
-          ),
-          const SizedBox(height: KSpacing.lg),
-
-          // 5. CREATOR & COMMUNITY
-          _buildSectionHeader('CREATOR & COMMUNITY', primaryColor),
-          KGlassCard(
-            padding: const EdgeInsets.all(KSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: primaryColor.withValues(alpha: 0.15),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: primaryColor.withValues(alpha: 0.4),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Center(
-                        child: Icon(Icons.person_rounded,
-                            color: primaryColor, size: 26),
-                      ),
-                    ),
-                    const SizedBox(width: KSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Muhammad Abdul Rafay',
-                            style: TextStyle(
-                              color: textPrimaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Creator & Lead Developer · ${KreateLinks.creatorHandle}',
-                            style: TextStyle(
-                              color: textSecondaryColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: KSpacing.md),
-                Divider(
-                  color: isDark
-                      ? KColors.glassBorderDark
-                      : KColors.glassBorderLight,
-                  height: 1,
-                ),
-                const SizedBox(height: KSpacing.sm),
-                // 4 Interactive Creator Action Tiles
-                ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.camera_alt_rounded,
-                      color: Color(0xFFE1306C), size: 22),
-                  title: Text(
-                    'Instagram: @kreatekode',
-                    style: TextStyle(
-                        color: textPrimaryColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13),
-                  ),
-                  trailing:
-                      const Icon(Icons.open_in_new_rounded, size: 16),
-                  onTap: () {
-                    FeedbackService.toolSelect(feedback);
-                    KreateLinks.launchUrlExternal(
-                        context, KreateLinks.instagram);
-                  },
-                ),
-                ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.code_rounded,
-                      color: Color(0xFF00E5FF), size: 22),
-                  title: Text(
-                    'GitHub: @rafayshhh',
-                    style: TextStyle(
-                        color: textPrimaryColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13),
-                  ),
-                  trailing:
-                      const Icon(Icons.open_in_new_rounded, size: 16),
-                  onTap: () {
-                    FeedbackService.toolSelect(feedback);
-                    KreateLinks.launchUrlExternal(
-                        context, KreateLinks.github);
-                  },
-                ),
-                ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.shop_rounded,
-                      color: Color(0xFFFFB300), size: 22),
-                  title: Text(
-                    'Google Play Store: KreateKode',
-                    style: TextStyle(
-                        color: textPrimaryColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13),
-                  ),
-                  trailing:
-                      const Icon(Icons.open_in_new_rounded, size: 16),
-                  onTap: () {
-                    FeedbackService.toolSelect(feedback);
-                    KreateLinks.launchUrlExternal(
-                        context, KreateLinks.playStore);
-                  },
-                ),
-                ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.language_rounded,
-                      color: Color(0xFF00E676), size: 22),
-                  title: Text(
-                    'Website: kreatekode.website',
-                    style: TextStyle(
-                        color: textPrimaryColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13),
-                  ),
-                  trailing:
-                      const Icon(Icons.open_in_new_rounded, size: 16),
-                  onTap: () {
-                    FeedbackService.toolSelect(feedback);
-                    KreateLinks.launchUrlExternal(
-                        context, KreateLinks.website);
-                  },
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: KSpacing.lg),
-
-          // 6. APPLICATION INFO & CODE REPO
-          _buildSectionHeader('APPLICATION INFO', primaryColor),
-          KGlassCard(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: Icon(
-                    Icons.info_outline_rounded,
-                    color: primaryColor,
-                  ),
-                  title: Text(
-                    'About Calculator',
-                    style: TextStyle(
-                      color: textPrimaryColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  subtitle: Text(
-                    'Version 1.0.0 · 150 Mathematical Tools Suite',
-                    style: TextStyle(color: textSecondaryColor, fontSize: 12),
-                  ),
-                  trailing: const Icon(Icons.chevron_right_rounded, size: 18),
-                  onTap: () {
-                    FeedbackService.toolSelect(feedback);
-                    context.push('/settings/about');
-                  },
-                ),
-                Divider(
-                  color: isDark
-                      ? KColors.glassBorderDark
-                      : KColors.glassBorderLight,
-                  height: 1,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.hub_rounded,
-                    color: primaryColor,
-                  ),
-                  title: Text(
-                    'Source Code Repository',
-                    style: TextStyle(
-                      color: textPrimaryColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  subtitle: Text(
                     'github.com/rafayshhh/calculator',
                     style: TextStyle(color: textSecondaryColor, fontSize: 12),
                   ),
-                  trailing: const Icon(Icons.open_in_new_rounded, size: 16),
+                  trailing: const Icon(Icons.open_in_new_rounded, size: 18),
                   onTap: () {
                     FeedbackService.toolSelect(feedback);
                     KreateLinks.launchUrlExternal(context, KreateLinks.repo);
@@ -799,27 +445,122 @@ class SettingsScreen extends ConsumerWidget {
                       ? KColors.glassBorderDark
                       : KColors.glassBorderLight,
                   height: 1,
+                  indent: 16,
+                  endIndent: 16,
                 ),
+                // Instagram
                 ListTile(
-                  leading: const Icon(
-                    Icons.bug_report_rounded,
-                    color: Color(0xFFFFB300),
+                  leading: Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE1306C).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt_rounded,
+                      color: Color(0xFFE1306C),
+                      size: 20,
+                    ),
                   ),
                   title: Text(
-                    'Report a Bug / Issue',
+                    'Instagram',
                     style: TextStyle(
                       color: textPrimaryColor,
                       fontWeight: FontWeight.w600,
+                      fontSize: 14,
                     ),
                   ),
                   subtitle: Text(
-                    'Submit an issue on GitHub',
+                    '@kreatekode',
                     style: TextStyle(color: textSecondaryColor, fontSize: 12),
                   ),
-                  trailing: const Icon(Icons.open_in_new_rounded, size: 16),
+                  trailing: const Icon(Icons.open_in_new_rounded, size: 18),
                   onTap: () {
                     FeedbackService.toolSelect(feedback);
-                    KreateLinks.launchUrlExternal(context, KreateLinks.issues);
+                    KreateLinks.launchUrlExternal(context, KreateLinks.instagram);
+                  },
+                ),
+                Divider(
+                  color: isDark
+                      ? KColors.glassBorderDark
+                      : KColors.glassBorderLight,
+                  height: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                // Developer GitHub Profile
+                ListTile(
+                  leading: Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFB388FF).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.hub_rounded,
+                      color: Color(0xFFB388FF),
+                      size: 20,
+                    ),
+                  ),
+                  title: Text(
+                    'GitHub Profile',
+                    style: TextStyle(
+                      color: textPrimaryColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  subtitle: Text(
+                    '@rafayshhh',
+                    style: TextStyle(color: textSecondaryColor, fontSize: 12),
+                  ),
+                  trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                  onTap: () {
+                    FeedbackService.toolSelect(feedback);
+                    KreateLinks.launchUrlExternal(context, KreateLinks.github);
+                  },
+                ),
+                Divider(
+                  color: isDark
+                      ? KColors.glassBorderDark
+                      : KColors.glassBorderLight,
+                  height: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                // Website
+                ListTile(
+                  leading: Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00E676).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.language_rounded,
+                      color: Color(0xFF00E676),
+                      size: 20,
+                    ),
+                  ),
+                  title: Text(
+                    'Official Website',
+                    style: TextStyle(
+                      color: textPrimaryColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'kreatekode.website',
+                    style: TextStyle(color: textSecondaryColor, fontSize: 12),
+                  ),
+                  trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                  onTap: () {
+                    FeedbackService.toolSelect(feedback);
+                    KreateLinks.launchUrlExternal(context, KreateLinks.website);
                   },
                 ),
               ],
